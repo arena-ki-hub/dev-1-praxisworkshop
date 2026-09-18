@@ -1,61 +1,21 @@
-# Installation Claude Code
+# Übung: Schritt 4 — Überstunden-Berechnung
 
-Als Erstes möchten wir Claude Code installieren.
+**Lernziel:** Plan Mode bei einer fachlich komplexeren Aufgabe mit mehreren Teilschritten.
 
-Dazu besuchst du die [offizielle Doku](https://code.claude.com/docs/de/quickstart) von Claude und hälst dich an die Anleitung.
+**Aufgabe:** Baue einen Endpoint, der für einen Mitarbeiter und einen Zeitraum die Überstunden berechnet: `GET /api/employees/{id}/overtime?from=...&to=...`.
 
-# Einleitung
+Berechnungsregel:
+- Samstag/Sonntag haben 0 Soll-Stunden.
+- An Werktagen gilt Soll-Stunden = `weeklyTargetHours / 5`.
+- Tage mit einer Abwesenheits-Buchung (`absence=true`, z.B. Urlaub) werden **komplett** aus der Berechnung ausgeschlossen (weder Soll- noch Ist-Stunden für diesen Tag).
+- Ist-Stunden = Summe der gebuchten Stunden aller Nicht-Abwesenheits-Einträge im Zeitraum (auch an Wochenenden, falls dort gebucht wurde).
+- Überstunden = Ist-Stunden − Soll-Stunden.
 
-Das hier ist ein Brown-Field Projekt. Das bedeutet, das dieses Projekt schon Code enthält.
+**Empfohlener Workflow:** Diese Aufgabe hat mehrere Teilschritte (Datumsbereich iterieren, Wochenenden erkennen, Abwesenheiten ausschließen, Summen bilden) — lohnt sich besonders, den Plan vor der Umsetzung gründlich mit `/grilling` zu hinterfragen (z.B.: Was passiert an einem Werktag ganz ohne Buchung? Was, wenn `from` nach `to` liegt?).
 
-Um einen Überblick des Projekts zu bekommen, fragen wir Claude.
+**Akzeptanzkriterien:**
+- Endpoint liefert `{ employeeId, from, to, sollStunden, istStunden, ueberstunden }`.
+- Ein Werktag ganz ohne Buchung zählt voll als Soll-Stunden (führt zu Minderstunden), ein Wochenendtag mit Buchung zählt voll als Überstunden.
+- Ein vertauschter Zeitraum (`from` nach `to`) liefert HTTP 400, ein unbekannter Mitarbeiter HTTP 404.
+- `./mvnw test` läuft grün, inkl. eines Tests mit gemischtem Szenario (Werktage, ein Urlaubstag, ein Wochenendtag mit Buchung).
 
-```bash
-# Wechsel zunächst in den Manual Mode
-Analysiere das Projekt und gib mir einen Überblick, ignoriere dabei die README.md
-```
-
-Claude hat das Projekt analysiert und uns die Informationen gegeben. Das hat uns aber einige Tokens gekostet, da das komplette Projekt analysiert wurde.
-
-Damit Claude das nicht jedes Mal neu machen muss und unnötig Tokens verbaucht, legen wir uns eine `CONTEXT.md` an.
-
-# Projekt einrichten (CONTEXT.md)
-
-Die `CONTEXT.md` Datei enthält Informationen über das Projekt.
-
-```bash
-# Wechsel in den Auto Mode
-Erstelle anhand der zuvor gesammelten Informationen eine CONTEXT.md. Speichere dabei aber nur die Informationen, die für die CONTEXT.md relevant sind.
-
-```
-
-# Skills
-
-An dieser Stelle möchten wir uns einen Überblick über den Kontext und Tokenverbrauch verschaffen.
-
-Dies machen wir über den Skill `/context`.
-
-## Claude Skills
-
-```bash
-/clear    # Leert den gesamten Kontext und startet somit eine neue Session
-/context  # Zeigt Informationen über den aktuellen Kontext
-/config   # Hier können Claude-Einstellungen vorgenommen werden
-/status   # Zeigt Informationen über Claude selbst
-/plugins  # Plugin Marktplatz um weitere Skills zu installieren
-```
-
-Um den Kontext zu leeren (und eine frische Sitzung zu starten) rufen wir den Skill `/clear` auf.
-
-## Thrid-Party-Skills
-
-Neben den integrierten Skills von Claude gibt es auch weitere Skills.
-
-Bekannte sind:
-
-- [Skills For Real Engineers - Matt Pocock](https://github.com/mattpocock/skills)
-- [OpenSpec - Fission-AI](https://github.com/Fission-AI/openspec)
-
-## Installation
-
-Installiere jetzt die Skills von Mat Pocock.
