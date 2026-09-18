@@ -1,61 +1,18 @@
-# Installation Claude Code
+# Übung: Schritt 2 — Zeiterfassungs-Einträge
 
-Als Erstes möchten wir Claude Code installieren.
+**Lernziel:** Testgetriebene Entwicklung (Rot-Grün-Refactor) im Zusammenspiel mit Claude Code — schau dir dazu den Skill `mattpocock-skills:tdd` an.
 
-Dazu besuchst du die [offizielle Doku](https://code.claude.com/docs/de/quickstart) von Claude und hälst dich an die Anleitung.
+**Aufgabe:** Baue eine REST-API für Zeiterfassungs-Einträge (`TimeEntry`) je Mitarbeiter: Datum, Anzahl gebuchter Stunden, eine kurze Tätigkeitsbeschreibung sowie ein Kennzeichen, ob es sich um eine Abwesenheit (z.B. Urlaub) handelt. Auch hier sollen die üblichen CRUD-Operationen möglich sein, diesmal im Kontext eines Mitarbeiters (`/api/employees/{employeeId}/time-entries`).
 
-# Einleitung
+Validiere dabei:
+- Stunden müssen größer als 0 und höchstens 24 sein.
+- Das Datum darf nicht in der Zukunft liegen.
+- Der referenzierte Mitarbeiter muss existieren.
 
-Das hier ist ein Brown-Field Projekt. Das bedeutet, das dieses Projekt schon Code enthält.
+**Empfohlener Workflow:** Lass Claude Code zunächst Tests für die Validierungsregeln und die CRUD-Operationen schreiben (rot), dann die Implementierung ergänzen (grün), erst danach ggf. Refactoring. Wie immer: Plan vorher mit `/grilling` hinterfragen.
 
-Um einen Überblick des Projekts zu bekommen, fragen wir Claude.
+**Akzeptanzkriterien:**
+- Neue Endpunkte sind über Swagger UI sichtbar und nutzbar.
+- Ungültige Eingaben (Stunden außerhalb 0-24, Datum in der Zukunft, unbekannter Mitarbeiter) liefern passende HTTP-Fehlercodes, keine 500er.
+- `./mvnw test` läuft grün, inkl. neuer Tests für die Validierungsregeln.
 
-```bash
-# Wechsel zunächst in den Manual Mode
-Analysiere das Projekt und gib mir einen Überblick, ignoriere dabei die README.md
-```
-
-Claude hat das Projekt analysiert und uns die Informationen gegeben. Das hat uns aber einige Tokens gekostet, da das komplette Projekt analysiert wurde.
-
-Damit Claude das nicht jedes Mal neu machen muss und unnötig Tokens verbaucht, legen wir uns eine `CONTEXT.md` an.
-
-# Projekt einrichten (CONTEXT.md)
-
-Die `CONTEXT.md` Datei enthält Informationen über das Projekt.
-
-```bash
-# Wechsel in den Auto Mode
-Erstelle anhand der zuvor gesammelten Informationen eine CONTEXT.md. Speichere dabei aber nur die Informationen, die für die CONTEXT.md relevant sind.
-
-```
-
-# Skills
-
-An dieser Stelle möchten wir uns einen Überblick über den Kontext und Tokenverbrauch verschaffen.
-
-Dies machen wir über den Skill `/context`.
-
-## Claude Skills
-
-```bash
-/clear    # Leert den gesamten Kontext und startet somit eine neue Session
-/context  # Zeigt Informationen über den aktuellen Kontext
-/config   # Hier können Claude-Einstellungen vorgenommen werden
-/status   # Zeigt Informationen über Claude selbst
-/plugins  # Plugin Marktplatz um weitere Skills zu installieren
-```
-
-Um den Kontext zu leeren (und eine frische Sitzung zu starten) rufen wir den Skill `/clear` auf.
-
-## Thrid-Party-Skills
-
-Neben den integrierten Skills von Claude gibt es auch weitere Skills.
-
-Bekannte sind:
-
-- [Skills For Real Engineers - Matt Pocock](https://github.com/mattpocock/skills)
-- [OpenSpec - Fission-AI](https://github.com/Fission-AI/openspec)
-
-## Installation
-
-Installiere jetzt die Skills von Mat Pocock.
