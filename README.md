@@ -17,17 +17,19 @@ Analysiere das Projekt und gib mir einen Überblick, ignoriere dabei die README.
 
 Claude hat das Projekt analysiert und uns die Informationen gegeben. Das hat uns aber einige Tokens gekostet, da das komplette Projekt analysiert wurde.
 
-Damit Claude das nicht jedes Mal neu machen muss und unnötig Tokens verbaucht, legen wir uns eine `CONTEXT.md` an.
+Damit Claude das nicht jedes Mal neu machen muss und unnötig Tokens verbraucht, legen wir uns eine `AGENTS.md` an.
 
-# Projekt einrichten (CONTEXT.md)
+# Projekt einrichten (AGENTS.md)
 
-Die `CONTEXT.md` Datei enthält Informationen über das Projekt.
+Die `AGENTS.md` Datei enthält Informationen über das Projekt, die ein KI-Agent in jeder Session braucht. `AGENTS.md` ist ein toolübergreifender Standard und wird von vielen Tools (z. B. Codex, Cursor, GitHub Copilot) gelesen.
 
 ```bash
 # Wechsel in den Auto Mode
-Erstelle anhand der zuvor gesammelten Informationen eine CONTEXT.md. Speichere dabei aber nur die Informationen, die für die CONTEXT.md relevant sind.
+Erstelle anhand der zuvor gesammelten Informationen eine AGENTS.md. Speichere dabei aber nur die Informationen, die für die AGENTS.md relevant sind. Lege außerdem eine CLAUDE.md an, die nur `@AGENTS.md` enthält.
 
 ```
+
+> **Hinweis:** Claude Code lädt automatisch nur die `CLAUDE.md`, nicht die `AGENTS.md`. Über den Import `@AGENTS.md` in der `CLAUDE.md` wird die `AGENTS.md` trotzdem in jede Session geladen. So gibt es nur eine Quelle für alle Tools. Ob die Datei geladen wurde, kannst du nach einem `/clear` mit `/context` prüfen (siehe nächster Abschnitt).
 
 # Skills
 
