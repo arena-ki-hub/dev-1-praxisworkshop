@@ -56,6 +56,7 @@ Erstelle anhand der zuvor gesammelten Informationen eine AGENTS.md. Speichere da
 /status   # Zeigt Informationen über Claude selbst
 /plugins  # Plugin Marktplatz um weitere Skills zu installieren
 /statusline  # Richtet die Statuszeile ein
+/agents   # Subagents anzeigen und eigene anlegen
 ```
 
 ## Überprüfung: Spart die AGENTS.md Tokens?
