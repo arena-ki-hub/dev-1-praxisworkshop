@@ -7,7 +7,7 @@
 **Empfohlener Workflow:** Plan Mode nutzen, den Plan mit `/grilling` hinterfragen (z.B.: Wie werden doppelte Usernames behandelt? Welche Felder sind Pflicht? Wie sieht die Fehlerantwort aus?), erst danach umsetzen lassen.
 
 **Akzeptanzkriterien:**
-- Die Anwendung startet mit `./mvnw spring-boot:run` (bzw. `mvnw.cmd spring-boot:run` unter Windows).
+- Die Anwendung startet mit `./mvnw spring-boot:run`.
 - Unter `/swagger-ui.html` sind alle Mitarbeiter-Endpunkte sichtbar und über "Try it out" nutzbar.
 - Ein doppelter Username wird mit einer sinnvollen Fehlermeldung abgelehnt (nicht mit HTTP 500).
 - `./mvnw test` läuft grün.

@@ -1,0 +1,26 @@
+{
+  "name": "dev-1-praxisworkshop",
+  "image": "mcr.microsoft.com/devcontainers/java:3-25-trixie",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
+  },
+  "mounts": [
+    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume"
+  ],
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
+  },
+  "forwardPorts": [8080],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "vscjava.vscode-java-pack",
+        "vmware.vscode-boot-dev-pack",
+        "anthropic.claude-code"
+      ]
+    }
+  }
+}
