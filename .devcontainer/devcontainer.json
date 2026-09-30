@@ -8,11 +8,13 @@
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
   },
   "mounts": [
-    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume"
+    "source=claude-code-config-${devcontainerId},target=/home/vscode/.claude,type=volume",
+    "source=maven-repo-${devcontainerId},target=/home/vscode/.m2,type=volume"
   ],
   "containerEnv": {
     "CLAUDE_CONFIG_DIR": "/home/vscode/.claude"
   },
+  "postCreateCommand": "sudo chown vscode:vscode /home/vscode/.claude /home/vscode/.m2",
   "forwardPorts": [8080],
   "customizations": {
     "vscode": {
