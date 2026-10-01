@@ -4,3 +4,5 @@ Alle sechs Schritte sind hier fertig umgesetzt — dieser Branch (`step-7`) enth
 
 Glückwunsch, wenn du bis hierhin selbst gekommen bist!
 
+Wer noch Zeit hat: Im Branch `step-8` gibt es eine **optionale Übung**, in der du einen eigenen Skill baust.
+
