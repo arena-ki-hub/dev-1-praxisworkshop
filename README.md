@@ -32,5 +32,5 @@ Alternativ kannst du für das Review auch die Skills `code-review` oder `simplif
 - Fehlt eine im Mapping referenzierte Pflichtspalte in der Datei, liefert der Import einen klaren Fehler (HTTP 400) statt eines unklaren Fehlers oder falscher Daten.
 - `./mvnw test` läuft grün, inkl. eines Tests mit abweichendem Spalten-Mapping.
 
-Das ist der letzte Schritt dieser Übung — glückwunsch!
+Das ist der letzte Pflichtschritt dieser Übung — glückwunsch! Die vollständige Referenzlösung findest du in `step-7`, eine optionale Zusatzübung (eigenen Skill bauen) in `step-8`.
 
