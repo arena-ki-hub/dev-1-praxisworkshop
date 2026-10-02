@@ -1,3 +1,19 @@
+## Projektüberblick
+
+Dieses Repository ist die Code-Basis für den Praxisworkshop zu Agentischem Arbeiten: ein einfaches Spring-Boot-Backend, das Überstunden aus Zeiterfassungsdaten berechnet (Mitarbeiter-Verwaltung, Zeiterfassungs-Einträge, Excel-Import, Überstunden-Berechnung — fachliche Details stehen in `AGENTS.md`).
+
+Die Übung ist in mehrere aufeinander aufbauende Schritte gegliedert, die jeweils auf einem eigenen Branch liegen:
+
+- **main** (dieser Branch): Einstieg in Claude Code (Installation, Statuszeile, `AGENTS.md`, Skills) — Ziel: Grundlagen für die folgenden Übungsschritte legen
+- **step-1**: Mitarbeiter-Verwaltung + Swagger UI — Ziel: Plan Mode & strukturiertes Prompting
+- **step-2**: Zeiterfassungs-Einträge — Ziel: Testgetriebene Entwicklung (Rot-Grün-Refactor)
+- **step-3**: Excel-Import — Ziel: Plan Mode beim Einbinden einer neuen Dependency und einem komplexeren Feature
+- **step-4**: Überstunden-Berechnung — Ziel: Plan Mode bei einer fachlich komplexeren Aufgabe mit mehreren Teilschritten
+- **step-5**: Bugfixing — Ziel: Debugging-Workflow
+- **step-6**: Konfigurierbares Spalten-Mapping für den Excel-Import — Ziel: Code Review vor einem Refactoring, Subagents
+- **step-7**: Vollständige Referenzlösung — Kontrollbranch zum Vergleich, kein eigener Übungsschritt
+- **step-8** (optional): Eigenen Skill bauen — Ziel: einen wiederkehrenden Ablauf als Skill verpacken
+
 # Claude Code starten
 
 Claude Code ist im Dev Container bereits installiert. Öffne in VS Code ein Terminal (Strg+Ö) – es läuft im Container – und starte Claude:
