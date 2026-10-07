@@ -37,7 +37,7 @@ Analysiere das Projekt und gib mir einen Überblick, ignoriere dabei die README.
 
 Claude hat das Projekt analysiert und uns die Informationen gegeben. Das hat uns aber einige Tokens gekostet, da das komplette Projekt analysiert wurde.
 
-> **Aufgabe:** Schau in deine Statuszeile: Wie viele Tokens hat die Analyse verbraucht? Vergleiche die Tokens mit deinen Kollegen (stellt vorher mit `/model` sicher, dass alle dasselbe Modell nutzen). Trotz gleichem Prompt und gleichem Projekt weichen die Zahlen ab, weil Claude jedes Mal andere Dateien liest und anders antwortet. **Notiere dir die Zahl**, wir brauchen sie später noch.
+> **Aufgabe:** Schau in deine Statuszeile: Wie viele Tokens hat die Analyse verbraucht? Vergleiche die Tokens mit deinen Kollegen (stellt vorher mit `/model` sicher, dass alle dasselbe Modell nutzen). Trotz gleichem Prompt und gleichem Projekt weichen die Zahlen ab, weil Claude jedes Mal andere Dateien liest und anders antwortet.
 
 # Statuszeile einrichten
 
@@ -49,11 +49,9 @@ Die Statuszeile ist die Leiste unten in der Claude CLI. Sie zeigt uns ab jetzt l
 
 > **Aufgabe:** Beantworte Claudes Rückfragen zu Layout, Farben, Text/Icons und möglichen Zusatzinfos nach deinem eigenen Geschmack. Dadurch sieht am Ende jede Statuszeile im Raum anders aus: jeder beantwortet die Rückfragen anders, und selbst bei identischen Antworten arbeitet das Modell nicht deterministisch. Falls die Limit-Anzeige bei dir leer bleibt, liegt das an deiner Account-/Anmeldeart – das Skript ist trotzdem korrekt.
 
-Damit Claude das nicht jedes Mal neu machen muss und unnötig Tokens verbraucht, legen wir uns eine `AGENTS.md` an.
-
 # Projekt einrichten (AGENTS.md)
 
-Die `AGENTS.md` Datei enthält Informationen über das Projekt, die ein KI-Agent in jeder Session braucht. `AGENTS.md` ist ein toolübergreifender Standard und wird von vielen Tools (z. B. Codex, Cursor, GitHub Copilot) gelesen.
+Damit Claude das Projekt nicht in jeder Session erneut komplett analysieren muss und dabei unnötig Tokens verbraucht, legen wir uns eine `AGENTS.md` an. Die Datei enthält Informationen über das Projekt, die ein KI-Agent in jeder Session braucht. `AGENTS.md` ist ein toolübergreifender Standard und wird von vielen Tools (z. B. Codex, Cursor, GitHub Copilot) gelesen.
 
 ```bash
 # Wechsel in den Auto Mode
@@ -86,9 +84,7 @@ Zunächst die wichtigsten Commands:
 
 > **Tipp:** Beginnst du eine Nachricht mit `!`, führt Claude Code den Rest direkt als Shell-Befehl aus (z. B. `!git status`), ohne dass Claude dafür gefragt werden muss. Praktisch für schnelle Checks zwischendurch, deren Ausgabe trotzdem im Kontext landet.
 
-## Überprüfung: Spart die AGENTS.md Tokens?
-
-An dieser Stelle möchten wir uns einen Überblick über den Kontext und Tokenverbrauch verschaffen und prüfen, ob sich die `AGENTS.md` lohnt.
+## Kontext prüfen
 
 Das Kontextfenster ist das Arbeitsgedächtnis von Claude. Alles darin kostet Tokens: der Systemprompt, die Tools, die `CLAUDE.md`/`AGENTS.md`, jede Nachricht und jede gelesene Datei. Wird es voll, fasst Claude den bisherigen Verlauf automatisch zusammen, und dabei gehen Details verloren.
 
@@ -97,15 +93,7 @@ Das Kontextfenster ist das Arbeitsgedächtnis von Claude. Alles darin kostet Tok
 /context  # Anzeigen, was schon im Kontext liegt
 ```
 
-> **Aufgabe 1:** Die Statuszeile zeigt schon vor der ersten Frage einige Prozent an. Finde mit `/context` heraus, woraus sie bestehen. Taucht deine `AGENTS.md` unter den Memory-Dateien auf?
-
-Stelle jetzt denselben Prompt wie in der Einleitung:
-
-```bash
-Analysiere das Projekt und gib mir einen Überblick, ignoriere dabei die README.md
-```
-
-> **Aufgabe 2:** Vergleiche den Tokenverbrauch mit der Zahl, die du dir notiert hast. Hat die `AGENTS.md` Tokens gespart? Schau auch, ob Claude diesmal weniger Dateien gelesen hat. Falls kaum etwas gespart wurde: Was müsste in der `AGENTS.md` stehen, damit Claude nicht wieder alles liest?
+> **Aufgabe:** Die Statuszeile zeigt schon vor der ersten Frage einige Prozent an. Finde mit `/context` heraus, woraus sie bestehen. Taucht deine `AGENTS.md` unter den Memory-Dateien auf?
 
 Nutze `/clear` immer, wenn du mit einer neuen Aufgabe beginnst. Alter Kontext kostet sonst bei jeder Nachricht erneut Tokens.
 
