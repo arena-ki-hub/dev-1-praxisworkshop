@@ -1,4 +1,4 @@
-## Projektüberblick
+# Projektüberblick
 
 Dieses Repository ist die Code-Basis für den Praxisworkshop zu Agentischem Arbeiten: ein einfaches Spring-Boot-Backend, das Überstunden aus Zeiterfassungsdaten berechnet (Mitarbeiter-Verwaltung, Zeiterfassungs-Einträge, Excel-Import, Überstunden-Berechnung — fachliche Details stehen in `AGENTS.md`).
 
@@ -24,17 +24,7 @@ claude
 
 Beim ersten Start meldest du dich mit deinem Konto an. Die Anmeldung und deine Claude-Einstellungen bleiben auch nach einem „Dev Containers: Rebuild Container" erhalten.
 
-# Statuszeile einrichten
-
-Die Statuszeile ist die Leiste unten in der Claude CLI. Sie zeigt uns ab jetzt laufend an, wie viele Tokens wir verbrauchen und wie voll das Kontextfenster ist.
-
-```bash
-/statusline Zeige den Tokenverbrauch der Session (Input und Output) und die Auslastung des Kontextfensters in Prozent an.
-```
-
-> **Aufgabe:** Vergleiche deine Statuszeile und das erzeugte Skript mit denen deines Nachbarn. Obwohl ihr denselben Prompt benutzt habt, sehen sie vermutlich unterschiedlich aus. KI ist nicht deterministisch: Dieselbe Eingabe führt nicht immer zum selben Ergebnis.
-
-# Einleitung
+# Projekt analysieren
 
 Das hier ist ein Brown-Field Projekt. Das bedeutet, das dieses Projekt schon Code enthält.
 
@@ -48,6 +38,16 @@ Analysiere das Projekt und gib mir einen Überblick, ignoriere dabei die README.
 Claude hat das Projekt analysiert und uns die Informationen gegeben. Das hat uns aber einige Tokens gekostet, da das komplette Projekt analysiert wurde.
 
 > **Aufgabe:** Schau in deine Statuszeile: Wie viele Tokens hat die Analyse verbraucht? Vergleiche die Tokens mit deinen Kollegen (stellt vorher mit `/model` sicher, dass alle dasselbe Modell nutzen). Trotz gleichem Prompt und gleichem Projekt weichen die Zahlen ab, weil Claude jedes Mal andere Dateien liest und anders antwortet. **Notiere dir die Zahl**, wir brauchen sie später noch.
+
+# Statuszeile einrichten
+
+Die Statuszeile ist die Leiste unten in der Claude CLI. Sie zeigt uns ab jetzt laufend an, wie viele Tokens wir verbrauchen, wie voll das Kontextfenster ist, was uns die Session kostet und wie es um unsere Nutzungslimits steht.
+
+```bash
+/statusline Zeige mir Modell, Branch, Input-/Output-Tokens der Session, Kontextfenster-Auslastung (Prozent und Tokens), das 5-Stunden- und 7-Tage-Limit (Prozent und Reset-Zeit/-Tag), die Kosten der Session sowie das aktuelle Reasoning-Effort-Level an. Frag mich vorher, wie ich das Ganze gestaltet haben möchte (Layout, Farben, Text/Icons/beides, zusätzliche Infos), bevor du das Skript schreibst.
+```
+
+> **Aufgabe:** Beantworte Claudes Rückfragen zu Layout, Farben, Text/Icons und möglichen Zusatzinfos nach deinem eigenen Geschmack. Dadurch sieht am Ende jede Statuszeile im Raum anders aus: jeder beantwortet die Rückfragen anders, und selbst bei identischen Antworten arbeitet das Modell nicht deterministisch. Falls die Limit-Anzeige bei dir leer bleibt, liegt das an deiner Account-/Anmeldeart – das Skript ist trotzdem korrekt.
 
 Damit Claude das nicht jedes Mal neu machen muss und unnötig Tokens verbraucht, legen wir uns eine `AGENTS.md` an.
 
