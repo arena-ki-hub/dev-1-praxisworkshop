@@ -61,11 +61,18 @@ Erstelle anhand der zuvor gesammelten Informationen eine AGENTS.md. Speichere da
 
 ```
 
-> **Hinweis:** Claude Code lädt automatisch nur die `CLAUDE.md`, nicht die `AGENTS.md`. Über den Import `@AGENTS.md` in der `CLAUDE.md` wird die `AGENTS.md` trotzdem in jede Session geladen. So gibt es nur eine Quelle für alle Tools. Ob die Datei geladen wurde, kannst du nach einem `/clear` mit `/context` prüfen (siehe nächster Abschnitt).
+> **Hinweis:** Das `@`-Zeichen bindet den Inhalt einer Datei in den Kontext ein. Hier als Import `@AGENTS.md` in der `CLAUDE.md`, wodurch die `AGENTS.md` trotzdem in jede Session geladen wird, obwohl Claude Code automatisch nur die `CLAUDE.md` lädt. So gibt es nur eine Quelle für alle Tools. Du kannst `@<Dateiname>` genauso direkt in einer Chat-Nachricht verwenden (z. B. `Erkläre mir @Employee.java`), um gezielt eine Datei in den Kontext zu holen. Ob eine Datei geladen wurde, kannst du nach einem `/clear` mit `/context` prüfen (siehe nächster Abschnitt).
 
 # Skills
 
-## Claude Skills
+## Commands vs. Skills
+
+Claude Code unterscheidet zwischen **Commands** und **Skills**:
+
+- **Commands** sind fest eingebaute Steuerbefehle für die CLI selbst (Kontext leeren, Einstellungen ändern, Statuszeile einrichten, …). Sie beginnen immer mit `/` und fügen Claude keine neuen fachlichen Fähigkeiten hinzu.
+- **Skills** sind paketierte Anleitungen für wiederkehrende Aufgaben (z. B. ein Code Review durchführen oder einen Report erstellen). Claude lädt einen Skill entweder automatisch, wenn die Aufgabe dazu passt, oder er wird manuell per `/<skill-name>` aufgerufen. Über `/plugins` lassen sich weitere Skills installieren (siehe Abschnitt „Thrid-Party-Skills" unten).
+
+Zunächst die wichtigsten Commands:
 
 ```bash
 /clear    # Leert den gesamten Kontext und startet somit eine neue Session
@@ -76,6 +83,8 @@ Erstelle anhand der zuvor gesammelten Informationen eine AGENTS.md. Speichere da
 /statusline  # Richtet die Statuszeile ein
 /agents   # Subagents anzeigen und eigene anlegen
 ```
+
+> **Tipp:** Beginnst du eine Nachricht mit `!`, führt Claude Code den Rest direkt als Shell-Befehl aus (z. B. `!git status`), ohne dass Claude dafür gefragt werden muss. Praktisch für schnelle Checks zwischendurch, deren Ausgabe trotzdem im Kontext landet.
 
 ## Überprüfung: Spart die AGENTS.md Tokens?
 
