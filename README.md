@@ -68,7 +68,7 @@ Erstelle anhand der zuvor gesammelten Informationen eine AGENTS.md. Speichere da
 Claude Code unterscheidet zwischen **Commands** und **Skills**:
 
 - **Commands** sind fest eingebaute Steuerbefehle für die CLI selbst (Kontext leeren, Einstellungen ändern, Statuszeile einrichten, …). Sie beginnen immer mit `/` und fügen Claude keine neuen fachlichen Fähigkeiten hinzu.
-- **Skills** sind paketierte Anleitungen für wiederkehrende Aufgaben (z. B. ein Code Review durchführen oder einen Report erstellen). Claude lädt einen Skill entweder automatisch, wenn die Aufgabe dazu passt, oder er wird manuell per `/<skill-name>` aufgerufen. Über `/plugins` lassen sich weitere Skills installieren (siehe Abschnitt „Thrid-Party-Skills" unten).
+- **Skills** sind paketierte Anleitungen für wiederkehrende Aufgaben (z. B. ein Code Review durchführen oder einen Report erstellen). Claude lädt einen Skill entweder automatisch, wenn die Aufgabe dazu passt, oder er wird manuell per `/<skill-name>` aufgerufen. Über `/plugins` lassen sich weitere Skills installieren (siehe Abschnitt „Third-Party-Skills" unten).
 
 Zunächst die wichtigsten Commands:
 
@@ -97,15 +97,37 @@ Das Kontextfenster ist das Arbeitsgedächtnis von Claude. Alles darin kostet Tok
 
 Nutze `/clear` immer, wenn du mit einer neuen Aufgabe beginnst. Alter Kontext kostet sonst bei jeder Nachricht erneut Tokens.
 
-## Thrid-Party-Skills
+## Third-Party-Skills
 
-Neben den integrierten Skills von Claude gibt es auch weitere Skills.
+Neben den integrierten Skills von Claude gibt es auch Skills von Drittanbietern.
 
-Bekannte sind:
+### Im Workshop genutzt
 
-- [Skills For Real Engineers - Matt Pocock](https://github.com/mattpocock/skills)
-- [OpenSpec - Fission-AI](https://github.com/Fission-AI/openspec)
+Wir installieren [Skills For Real Engineers](https://github.com/mattpocock/skills) von Matt Pocock und nutzen sie im weiteren Verlauf des Workshops. Sie liegen im offiziellen Marketplace von Claude Code, es muss also vorher kein Marketplace hinzugefügt werden:
 
-## Installation
+```bash
+claude plugins install mattpocock-skills
+```
 
-Installiere jetzt die Skills von Mat Pocock.
+Oder innerhalb einer laufenden Session:
+
+```bash
+/plugin install mattpocock-skills
+```
+
+> **Hinweis:** Der offizielle Marketplace hinkt dem Repository oft um Tage oder Wochen hinterher. Wenn du stattdessen immer die aktuellste Version direkt aus dem Repository willst, nutze dessen eigenen Marketplace (Auto-Update dafür unter `/plugin` → Marketplaces aktivieren, bei Marketplaces außerhalb von Anthropic ist es standardmäßig aus):
+>
+> ```bash
+> claude plugin uninstall mattpocock-skills@claude-plugins-official
+> claude plugin marketplace add mattpocock/skills
+> claude plugin install mattpocock-skills@mattpocock
+> ```
+
+### Weitere Beispiele für eigene Projekte
+
+> ⚠️ **Nur zur Orientierung:** Die folgenden Skills werden in diesem Workshop **nicht** installiert und **nicht** verwendet. Sie sind als Anregung gedacht, was du dir nach dem Workshop für deine eigenen Projekte anschauen kannst.
+
+| Skill | Wofür |
+| --- | --- |
+| [Superpowers - Jesse Vincent](https://github.com/obra/superpowers) | Umfangreiches Framework mit Methodik für Brainstorming, Planung, TDD und Code Review |
+| [OpenSpec - Fission-AI](https://github.com/Fission-AI/openspec) | Spec-getriebene Entwicklung: erst Spezifikation abstimmen, dann implementieren |
