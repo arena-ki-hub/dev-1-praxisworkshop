@@ -14,6 +14,8 @@ Die Übung ist in mehrere aufeinander aufbauende Schritte gegliedert, die jeweil
 - **step-7**: Vollständige Referenzlösung — Kontrollbranch zum Vergleich, kein eigener Übungsschritt
 - **step-8** (optional): Eigenen Skill bauen — Ziel: einen wiederkehrenden Ablauf als Skill verpacken
 
+Jeder Übungsschritt endet mit einem manuellen Test: App starten, Swagger UI im Browser öffnen, das neue Feature selbst durchklicken. Warum das zur Aufgabe gehört und wie es abläuft, steht unten unter „Features selbst testen".
+
 # Claude Code starten
 
 Claude Code ist im Dev Container bereits installiert. Öffne in VS Code ein Terminal (Strg+Ö) – es läuft im Container – und starte Claude:
@@ -48,6 +50,8 @@ Die Statuszeile ist die Leiste unten in der Claude CLI. Sie zeigt uns ab jetzt l
 ```
 
 > **Aufgabe:** Beantworte Claudes Rückfragen zu Layout, Farben, Text/Icons und möglichen Zusatzinfos nach deinem eigenen Geschmack. Dadurch sieht am Ende jede Statuszeile im Raum anders aus: jeder beantwortet die Rückfragen anders, und selbst bei identischen Antworten arbeitet das Modell nicht deterministisch. Falls die Limit-Anzeige bei dir leer bleibt, liegt das an deiner Account-/Anmeldeart – das Skript ist trotzdem korrekt.
+
+> **Tipp:** Funktioniert etwas nicht – die Statuszeile bleibt leer, ein Wert fehlt oder das Skript wirft einen Fehler – dann beschreibe das Problem einfach Claude und lass es dich selbst beheben. Das gilt im ganzen Workshop: Erster Versuch bei Fehlern ist immer, die KI um den Fix zu bitten, statt selbst im Skript oder Code zu suchen.
 
 # Projekt einrichten (AGENTS.md)
 
@@ -131,3 +135,23 @@ Oder innerhalb einer laufenden Session:
 | --- | --- |
 | [Superpowers - Jesse Vincent](https://github.com/obra/superpowers) | Umfangreiches Framework mit Methodik für Brainstorming, Planung, TDD und Code Review |
 | [OpenSpec - Fission-AI](https://github.com/Fission-AI/openspec) | Spec-getriebene Entwicklung: erst Spezifikation abstimmen, dann implementieren |
+
+# Features selbst testen
+
+Ein grüner `./mvnw test` heißt zunächst nur: Claudes Code besteht Claudes Tests. Ob das Feature wirklich funktioniert, siehst du erst in der laufenden Anwendung — und genau dieser Blick fällt beim agentischen Arbeiten als Erstes unter den Tisch. Deshalb endet jeder Übungsschritt mit einem manuellen Test; die konkreten Fälle stehen jeweils im README des Schritts unter „Feature selbst testen".
+
+1. App starten – entweder selbst in einem zweiten Terminal:
+
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+   oder von Claude starten lassen (`Starte die App im Hintergrund und sag mir, wenn sie läuft`).
+
+2. Swagger UI im Browser öffnen: <http://localhost:8080/swagger-ui.html>. Der Dev Container leitet Port 8080 automatisch weiter (Reiter „Ports" in VS Code), ein Strg+Klick auf die URL im Terminal öffnet sie direkt.
+
+3. Die Endpunkte mit „Try it out" durchklicken – immer den Happy Path **und** mindestens einen Fehlerfall. Anschließend prüfen, ob die Daten wirklich angekommen sind (`GET`-Endpunkt oder H2-Konsole).
+
+4. Geht etwas schief, gib Claude die konkrete Anfrage und die Antwort („`POST /api/employees` mit doppeltem Username liefert 500, Response: …") statt nur „geht nicht". Damit hat es genau den Kontext, den der Testlauf nicht liefert.
+
+> **Tipp:** Die H2-Konsole unter <http://localhost:8080/h2-console> (JDBC-URL `jdbc:h2:mem:backend`, Benutzer `sa`, kein Passwort) zeigt dir, was tatsächlich in der Datenbank steht. Die Datenbank liegt im Arbeitsspeicher: nach jedem Neustart der App gelten wieder die Seed-Daten aus `data.sql`.
