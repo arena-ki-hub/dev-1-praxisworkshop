@@ -51,7 +51,15 @@ Wie viele Überstunden hat a.schmidt im September 2026 gemacht?
 
 > **Aufgabe:** Benutzt Claude deinen Skill bei dieser Frage von selbst? Falls nicht, schärfe die `description` nach und probiere es erneut. Vergleicht eure Beschreibungen mit dem Nachbarn: Welche Formulierung funktioniert zuverlässiger?
 
+**Ergebnis selbst gegenprüfen (Pflicht):** Ein Skill, der plausibel klingende Zahlen zusammenfasst, fällt nicht auf, solange niemand gegenprüft. Ruf den Endpoint deshalb einmal selbst auf:
+
+1. Swagger UI im Browser öffnen: <http://localhost:8080/swagger-ui.html> (die App läuft bereits im zweiten Terminal; im Dev Container ist Port 8080 weitergeleitet, siehe Reiter „Ports").
+2. `GET /api/employees` → ID von `a.schmidt` holen, dann `GET /api/employees/{id}/overtime?from=2026-09-01&to=2026-09-30` aufrufen.
+3. Soll-, Ist- und Überstunden müssen exakt dem entsprechen, was `/ueberstunden a.schmidt 2026-09-01 2026-09-30` zusammenfasst — inklusive Vorzeichen (Minderstunden sind negativ).
+4. Danach die beiden Fehlerfälle durchspielen: unbekannter Username und vertauschter Zeitraum.
+
 **Akzeptanzkriterien:**
 - `/ueberstunden <username> <von> <bis>` liefert dieselben Werte wie der Endpoint.
 - Ein unbekannter Username und ein vertauschter Zeitraum (`von` nach `bis`) werden verständlich gemeldet, statt dass Claude rät oder eine Fehlermeldung roh weitergibt.
 - Claude benutzt den Skill auch ohne Slash-Command, wenn nach Überstunden eines Mitarbeiters gefragt wird.
+- Du hast die Zahlen des Skills einmal selbst über die Swagger UI gegengeprüft.
