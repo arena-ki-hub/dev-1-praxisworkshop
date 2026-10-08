@@ -26,11 +26,30 @@ Lass einen Subagent den TimeEntryImportService reviewen: Welche Stellen sind fes
 
 Alternativ kannst du für das Review auch die Skills `code-review` oder `simplify` nutzen. Erst danach den Umbau planen, mit `/grilling` hinterfragen (z.B.: Was passiert, wenn eine im Mapping referenzierte Spalte in der Datei fehlt? Muss die Beispieldatei weiter funktionieren?) und umsetzen.
 
+**Feature selbst testen (Pflicht):** Nach einem Refactoring ist der wichtigste Test der, dass das alte Verhalten unverändert funktioniert — und zwar in der laufenden Anwendung, nicht nur in der Testsuite.
+
+1. App starten (zweites Terminal, oder von Claude im Hintergrund starten lassen):
+
+   ```bash
+   ./mvnw spring-boot:run
+   ```
+
+2. Swagger UI im Browser öffnen: <http://localhost:8080/swagger-ui.html> (im Dev Container ist Port 8080 weitergeleitet, siehe Reiter „Ports").
+
+3. **Default-Mapping (Regression):** `POST /api/time-entries/import` mit `samples/zeiterfassung-import-beispiel.xlsx` ohne eigenes Mapping → unverändert 9 importierte Zeilen und eine übersprungene Zeile (`x.unbekannt`).
+
+4. **Eigenes Mapping:** Lass dir von Claude eine zweite Excel-Datei mit anderen Spaltennamen und anderer Reihenfolge erzeugen (z.B. `Tag`, `Mitarbeiter`, `Dauer`, `Tätigkeit`, `Urlaub`), importiere sie mit passendem Mapping und prüfe über `GET /api/employees/{employeeId}/time-entries`, dass die Einträge wirklich angekommen sind.
+
+5. **Fehlerfall:** Dieselbe Datei mit einem Mapping importieren, das eine nicht vorhandene Spalte referenziert → klare 400-Antwort, die die fehlende Spalte benennt, statt stillschweigend falscher Daten.
+
+6. Stimmt etwas nicht, gib Claude die konkrete Anfrage, das verwendete Mapping und die Antwort aus der Swagger UI statt nur „geht nicht".
+
 **Akzeptanzkriterien:**
 - Der bestehende Import mit der Beispieldatei und dem Default-Mapping funktioniert weiterhin unverändert.
 - Eine Datei mit abweichenden, aber vollständigen Spaltenüberschriften lässt sich importieren, wenn ein passendes Mapping mitgegeben wird.
 - Fehlt eine im Mapping referenzierte Pflichtspalte in der Datei, liefert der Import einen klaren Fehler (HTTP 400) statt eines unklaren Fehlers oder falscher Daten.
 - `./mvnw test` läuft grün, inkl. eines Tests mit abweichendem Spalten-Mapping.
+- Du hast beide Importe (Default-Mapping und eigenes Mapping) sowie den Fehlerfall selbst in der laufenden Anwendung ausprobiert.
 
 Das ist der letzte Pflichtschritt dieser Übung — glückwunsch! Die vollständige Referenzlösung findest du in `step-7`, eine optionale Zusatzübung (eigenen Skill bauen) in `step-8`.
 
