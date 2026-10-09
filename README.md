@@ -16,6 +16,26 @@ Die Übung ist in mehrere aufeinander aufbauende Schritte gegliedert, die jeweil
 
 Jeder Übungsschritt endet mit einem manuellen Test: App starten, Swagger UI im Browser öffnen, das neue Feature selbst durchklicken. Warum das zur Aufgabe gehört und wie es abläuft, steht unten unter „Features selbst testen".
 
+# Arbeiten mit den Übungsschritten
+
+Jeder Schritt liegt auf einem eigenen Branch und bringt seinen eigenen Ausgangsstand mit: `step-2` enthält bereits die fertige Lösung aus Schritt 1, `step-3` die aus Schritt 2 und so weiter. Du kannst also an jeder Stelle einsteigen — aber nichts aus einem Schritt in den nächsten mitnehmen. **Beim Wechsel wird deine Arbeit verworfen, und das ist beabsichtigt.**
+
+So wechselst du von einem Schritt zum nächsten:
+
+```bash
+git reset --hard        # verwirft Änderungen an vorhandenen Dateien
+git clean -fd           # entfernt neu angelegte Dateien
+git checkout step-2
+```
+
+Statt die Befehle selbst zu tippen, kannst du Claude auch einfach sagen, was passieren soll:
+
+```bash
+Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-2.
+```
+
+Beginne jeden Schritt außerdem mit `/clear` in Claude: Der Kontext des vorigen Schritts hilft im nächsten nicht und kostet bei jeder Nachricht erneut Tokens (mehr dazu unten unter „Kontext prüfen").
+
 # Claude Code starten
 
 Claude Code ist im Dev Container bereits installiert. Öffne in VS Code ein Terminal (Strg+Ö) – es läuft im Container – und starte Claude:
@@ -31,6 +51,8 @@ Beim ersten Start meldest du dich mit deinem Konto an. Die Anmeldung und deine C
 Das hier ist ein Brown-Field Projekt. Das bedeutet, das dieses Projekt schon Code enthält.
 
 Um einen Überblick des Projekts zu bekommen, fragen wir Claude.
+
+Mit `Shift+Tab` schaltest du zwischen den Modi um; der aktive Modus steht in der Eingabezeile.
 
 ```bash
 # Wechsel zunächst in den Manual Mode
@@ -58,7 +80,7 @@ Die Statuszeile ist die Leiste unten in der Claude CLI. Sie zeigt uns ab jetzt l
 Damit Claude das Projekt nicht in jeder Session erneut komplett analysieren muss und dabei unnötig Tokens verbraucht, legen wir uns eine `AGENTS.md` an. Die Datei enthält Informationen über das Projekt, die ein KI-Agent in jeder Session braucht. `AGENTS.md` ist ein toolübergreifender Standard und wird von vielen Tools (z. B. Codex, Cursor, GitHub Copilot) gelesen.
 
 ```bash
-# Wechsel in den Auto Mode
+# Wechsel in den Auto Mode (Shift+Tab)
 Erstelle anhand der zuvor gesammelten Informationen eine AGENTS.md. Speichere dabei aber nur die Informationen, die für die AGENTS.md relevant sind. Lege außerdem eine CLAUDE.md an, die nur `@AGENTS.md` enthält.
 
 ```
@@ -155,3 +177,23 @@ Ein grüner `./mvnw test` heißt zunächst nur: Claudes Code besteht Claudes Tes
 4. Geht etwas schief, gib Claude die konkrete Anfrage und die Antwort („`POST /api/employees` mit doppeltem Username liefert 500, Response: …") statt nur „geht nicht". Damit hat es genau den Kontext, den der Testlauf nicht liefert.
 
 > **Tipp:** Die H2-Konsole unter <http://localhost:8080/h2-console> (JDBC-URL `jdbc:h2:mem:backend`, Benutzer `sa`, kein Passwort) zeigt dir, was tatsächlich in der Datenbank steht. Die Datenbank liegt im Arbeitsspeicher: nach jedem Neustart der App gelten wieder die Seed-Daten aus `data.sql`.
+
+# Weiter
+
+Fertig? Dann weiter mit Schritt 1 (Mitarbeiter-Verwaltung + Swagger UI).
+
+```bash
+git reset --hard        # verwirft Änderungen an vorhandenen Dateien
+git clean -fd           # entfernt neu angelegte Dateien
+git checkout step-1
+```
+
+Statt die Befehle selbst zu tippen, kannst du Claude auch einfach sagen, was passieren soll:
+
+```bash
+Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-1.
+```
+
+Deine `AGENTS.md` und `CLAUDE.md` gehen dabei verloren — jeder Übungsschritt bringt aber bereits eine eigene mit.
+
+Danach in Claude einmal `/clear`: Der Kontext aus diesem Schritt hilft im nächsten nicht und kostet bei jeder Nachricht erneut Tokens.
