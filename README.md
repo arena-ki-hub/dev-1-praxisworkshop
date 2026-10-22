@@ -10,7 +10,7 @@ Plan Mode beim Einbinden einer neuen Dependency (Apache POI) und beim Bauen eine
 
 Lass dir im Plan zeigen, welche Dependency in welcher Version dazukommt und wie das Ergebnis des Imports aussehen soll, bevor du freigibst.
 
-**`/grilling`** bleibt das Werkzeug dafür: Steht der Plan, nimmt der Skill ihn auseinander und legt dir jeden offenen Punkt einzeln mit einer Empfehlung vor.
+**`/grilling`** bleibt das Werkzeug dafür: Du startest es direkt mit der Aufgabe, der Skill nimmt sie auseinander und legt dir jeden offenen Punkt einzeln mit einer Empfehlung vor.
 
 ## Aufgabe
 
@@ -24,11 +24,15 @@ Der Username muss zu einem existierenden Mitarbeiter passen (Matching über `Emp
 
 ## Empfohlener Workflow
 
-1. **In den Plan Mode wechseln** (`Shift+Tab`) und die Aufgabe prompten — neue Dependency `org.apache.poi:poi-ooxml`, Datei-Upload, Fehlerbehandlung pro Zeile.
+1. **In den Plan Mode wechseln** (`Shift+Tab`, bis in der Eingabezeile der Plan Mode steht).
 
-2. **Den Plan mit `/grilling` hinterfragen** und erst danach freigeben.
+2. **Die Aufgabe direkt mit `/grilling` starten** — kein separater Plan-Prompt nötig, der Skill befragt dich zur Aufgabe und legt dir jeden offenen Punkt einzeln mit einer Empfehlung vor:
 
-3. **Umsetzen lassen** und den Import anschließend über die Swagger UI mit der Beispieldatei ausprobieren.
+   ```bash
+   /grilling Baue einen Import-Endpoint für Excel-Dateien mit Zeiterfassungsdaten (Spaltenlayout und Beispieldatei siehe README). Achte besonders auf die neue Dependency (Apache POI, `poi-ooxml`) samt Version, den Upload und die Behandlung fehlerhafter Zeilen.
+   ```
+
+3. **Den Plan freigeben und umsetzen lassen** — danach implementiert Claude den Import und lässt `./mvnw test` laufen. Weiter geht es mit dem nächsten Abschnitt: Import selbst ausprobieren.
 
 ## Feature selbst testen (Pflicht)
 
