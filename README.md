@@ -1,82 +1,82 @@
-# Optionale Übung: Schritt 8 — Eigenen Skill bauen
+# Optional exercise: Step 8 — Build your own skill
 
-## Lernziel
+## Learning goal
 
-Einen wiederkehrenden Ablauf als eigenen Skill verpacken — und verstehen, wie sich ein Skill von der `AGENTS.md` unterscheidet.
+Package a recurring workflow as your own skill — and understand how a skill differs from `AGENTS.md`.
 
-## Die Methode dieses Schritts
+## The method of this step
 
-**Was ist ein Skill?** Ein Skill ist eine Anleitung für Claude, die nur bei Bedarf geladen wird. Die `AGENTS.md` liegt in jeder Session komplett im Kontext. Von einem Skill steht dagegen nur der Name und die Beschreibung im Kontext. Den eigentlichen Inhalt lädt Claude erst, wenn der Skill aufgerufen wird oder die Beschreibung zur Frage passt. Ein Projekt-Skill ist ein Ordner mit einer `SKILL.md`:
+**What is a skill?** A skill is a set of instructions for Claude that is only loaded when needed. `AGENTS.md` is fully in the context of every session. For a skill, only the name and description are in the context. Claude loads the actual content only when the skill is invoked or when the description matches the question. A project skill is a folder with a `SKILL.md`:
 
 ```text
 .claude/skills/<name>/SKILL.md
 ```
 
-Die `SKILL.md` beginnt mit einem YAML-Frontmatter, darunter folgen die Anweisungen in Markdown:
+The `SKILL.md` starts with YAML frontmatter, followed by the instructions in Markdown:
 
 ```markdown
 ---
-name: mein-skill
-description: Was der Skill tut und wann Claude ihn benutzen soll.
+name: my-skill
+description: What the skill does and when Claude should use it.
 ---
 
-Anweisungen für Claude, Schritt für Schritt.
-Übergebene Argumente stehen in $ARGUMENTS.
+Instructions for Claude, step by step.
+Passed arguments are available in $ARGUMENTS.
 ```
 
-Aufgerufen wird der Skill mit `/mein-skill` plus Argumenten. Die `description` entscheidet außerdem, ob Claude den Skill auch ohne Slash-Command von selbst benutzt.
+You invoke the skill with `/my-skill` plus arguments. The `description` also decides whether Claude uses the skill on its own, without a slash command.
 
-## Ausgangslage
+## Starting point
 
-Dieser Branch enthält die vollständige Referenzlösung aus Schritt 7, inklusive des Überstunden-Endpoints `GET /api/employees/{id}/overtime?from=...&to=...`. Um Überstunden abzufragen, muss man bisher die Mitarbeiter-ID kennen und die URL von Hand zusammenbauen. Genau so etwas lässt sich gut als Skill verpacken.
+This branch contains the complete reference solution from step 7, including the overtime endpoint `GET /api/employees/{id}/overtime?from=...&to=...`. To query overtime, you currently have to know the employee ID and assemble the URL by hand. That is exactly the kind of thing that is well suited to be packaged as a skill.
 
-## Aufgabe
+## Task
 
-Baue einen Skill `/ueberstunden`, der die Überstunden eines Mitarbeiters für einen Zeitraum abfragt, z.B.:
+Build a skill `/overtime` that queries the overtime of an employee for a period, e.g.:
 
 ```bash
-/ueberstunden a.schmidt 2026-09-01 2026-09-30
+/overtime a.schmidt 2026-09-01 2026-09-30
 ```
 
-Der Skill soll:
+The skill should:
 
-- den Username über `GET /api/employees` in die Mitarbeiter-ID übersetzen,
-- den Überstunden-Endpoint per `curl` aufrufen,
-- Soll-, Ist- und Überstunden kurz auf Deutsch zusammenfassen.
+- translate the username into the employee ID via `GET /api/employees`,
+- call the overtime endpoint with `curl`,
+- briefly summarize target, actual and overtime hours in English.
 
-Die App muss dafür laufen (in einem zweiten Terminal):
+The app has to be running for this (in a second terminal):
 
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Sie ist dann unter `http://localhost:8080` erreichbar. Die Seed-Daten enthalten die Mitarbeiter `a.schmidt`, `m.mueller` und `j.klein`.
+It is then available at `http://localhost:8080`. The seed data contains the employees `a.schmidt`, `m.mueller` and `j.klein`.
 
-## Empfohlener Workflow
+## Recommended workflow
 
-Schreib den Skill zusammen mit Claude, z.B. mit dem Skill `skill-creator` oder nach den Tipps aus `mattpocock-skills:writing-for-agents`. Starte danach mit `/clear` neu und prüfe mit `/context`, dass vom Skill nur Name und Beschreibung im Kontext liegen. Ruf ihn dann einmal per `/ueberstunden` auf und stell anschließend eine Frage ohne Slash-Command:
+Write the skill together with Claude, e.g. with the `skill-creator` skill or following the tips from `mattpocock-skills:writing-for-agents`. Then start over with `/clear` and check with `/context` that only the name and description of the skill are in the context. Then invoke it once via `/overtime` and afterwards ask a question without a slash command:
 
 ```bash
-Wie viele Überstunden hat a.schmidt im September 2026 gemacht?
+How many overtime hours did a.schmidt work in September 2026?
 ```
 
-> **Aufgabe:** Benutzt Claude deinen Skill bei dieser Frage von selbst? Falls nicht, schärfe die `description` nach und probiere es erneut. Vergleicht eure Beschreibungen mit dem Nachbarn: Welche Formulierung funktioniert zuverlässiger?
+> **Task:** Does Claude use your skill on its own for this question? If not, sharpen the `description` and try again. Compare your descriptions with your neighbor's: which wording works more reliably?
 
-## Ergebnis selbst gegenprüfen (Pflicht)
+## Check the result yourself (mandatory)
 
-Ein Skill, der plausibel klingende Zahlen zusammenfasst, fällt nicht auf, solange niemand gegenprüft. Ruf den Endpoint deshalb einmal selbst auf:
+A skill that summarizes plausible-sounding numbers goes unnoticed as long as nobody double-checks. So call the endpoint yourself once:
 
-1. **Swagger UI öffnen** — <http://localhost:8080/swagger-ui.html> (die App läuft bereits im zweiten Terminal; im Dev Container ist Port 8080 weitergeleitet, siehe Reiter „Ports").
+1. **Open the Swagger UI** — <http://localhost:8080/swagger-ui.html> (the app is already running in the second terminal; in the Dev Container port 8080 is forwarded, see the "Ports" tab).
 
-2. **Endpoint aufrufen** — `GET /api/employees` → ID von `a.schmidt` holen, dann `GET /api/employees/{id}/overtime?from=2026-09-01&to=2026-09-30` aufrufen.
+2. **Call the endpoint** — `GET /api/employees` → get the ID of `a.schmidt`, then call `GET /api/employees/{id}/overtime?from=2026-09-01&to=2026-09-30`.
 
-3. **Zahlen vergleichen** — Soll-, Ist- und Überstunden müssen exakt dem entsprechen, was `/ueberstunden a.schmidt 2026-09-01 2026-09-30` zusammenfasst — inklusive Vorzeichen (Minderstunden sind negativ).
+3. **Compare the numbers** — Target, actual and overtime hours must match exactly what `/overtime a.schmidt 2026-09-01 2026-09-30` summarizes — including the sign (undertime is negative).
 
-4. **Fehlerfälle** — Danach die beiden Fehlerfälle durchspielen: unbekannter Username und vertauschter Zeitraum.
+4. **Error cases** — Then play through the two error cases: unknown username and swapped period.
 
-## Akzeptanzkriterien
+## Acceptance criteria
 
-- `/ueberstunden <username> <von> <bis>` liefert dieselben Werte wie der Endpoint.
-- Ein unbekannter Username und ein vertauschter Zeitraum (`von` nach `bis`) werden verständlich gemeldet, statt dass Claude rät oder eine Fehlermeldung roh weitergibt.
-- Claude benutzt den Skill auch ohne Slash-Command, wenn nach Überstunden eines Mitarbeiters gefragt wird.
-- Du hast die Zahlen des Skills einmal selbst über die Swagger UI gegengeprüft.
+- `/overtime <username> <from> <to>` returns the same values as the endpoint.
+- An unknown username and a swapped period (`from` after `to`) are reported clearly, instead of Claude guessing or passing on a raw error message.
+- Claude uses the skill without a slash command when asked about the overtime of an employee.
+- You have double-checked the skill's numbers once via the Swagger UI.

@@ -32,7 +32,7 @@ public class GlobalExceptionHandler {
 		String message = ex.getBindingResult().getFieldErrors().stream()
 				.map(error -> error.getField() + ": " + error.getDefaultMessage())
 				.reduce((a, b) -> a + "; " + b)
-				.orElse("Validierung fehlgeschlagen");
+				.orElse("Validation failed");
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST)
 				.body(ApiError.of(HttpStatus.BAD_REQUEST.value(), "Bad Request", message));
 	}

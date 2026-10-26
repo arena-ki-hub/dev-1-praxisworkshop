@@ -28,11 +28,11 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validator;
 
 /**
- * Liest Zeile 1 als Kopfzeile und ordnet die fachlichen Felder anhand des
- * {@link ColumnMapping} den Spaltenüberschriften zu (nicht anhand fester
- * Spaltenpositionen). So bleibt der Import auch für andere Export-Formate
- * nutzbar, solange die Spalten passend benannt sind bzw. ein passendes
- * Mapping mitgegeben wird.
+ * Reads row 1 as the header row and maps the business fields to the column
+ * headers using the {@link ColumnMapping} (not by fixed column
+ * positions). This keeps the import usable for other export formats
+ * as long as the columns are named accordingly or a matching
+ * mapping is supplied.
  */
 @Service
 public class TimeEntryImportService {
@@ -76,7 +76,7 @@ public class TimeEntryImportService {
 				String username = formatter.formatCellValue(row.getCell(usernameColumn)).trim();
 				Employee employee = employeeRepository.findByUsername(username).orElse(null);
 				if (employee == null) {
-					errors.add(new ImportRowError(humanRowNumber, "Unbekannter Mitarbeiter: '%s'".formatted(username)));
+					errors.add(new ImportRowError(humanRowNumber, "Unknown employee: '%s'".formatted(username)));
 					continue;
 				}
 
@@ -84,7 +84,7 @@ public class TimeEntryImportService {
 				try {
 					date = LocalDate.parse(formatter.formatCellValue(row.getCell(dateColumn)).trim());
 				} catch (DateTimeParseException ex) {
-					errors.add(new ImportRowError(humanRowNumber, "Ungültiges Datum"));
+					errors.add(new ImportRowError(humanRowNumber, "Invalid date"));
 					continue;
 				}
 
@@ -92,7 +92,7 @@ public class TimeEntryImportService {
 				try {
 					hours = new BigDecimal(formatter.formatCellValue(row.getCell(hoursColumn)).trim().replace(",", "."));
 				} catch (NumberFormatException ex) {
-					errors.add(new ImportRowError(humanRowNumber, "Ungültige Stundenzahl"));
+					errors.add(new ImportRowError(humanRowNumber, "Invalid number of hours"));
 					continue;
 				}
 
@@ -132,7 +132,7 @@ public class TimeEntryImportService {
 	private static int requireColumn(Map<String, Integer> headerIndex, String columnName) {
 		Integer index = headerIndex.get(columnName);
 		if (index == null) {
-			throw new BadRequestException("Pflichtspalte '%s' nicht in der Excel-Datei gefunden".formatted(columnName));
+			throw new BadRequestException("Required column '%s' not found in the Excel file".formatted(columnName));
 		}
 		return index;
 	}
@@ -143,13 +143,13 @@ public class TimeEntryImportService {
 
 	private static boolean isYes(String value) {
 		String normalized = value.trim().toLowerCase();
-		return normalized.equals("ja") || normalized.equals("yes") || normalized.equals("true");
+		return normalized.equals("yes") || normalized.equals("true");
 	}
 
 	private static String describe(Set<ConstraintViolation<TimeEntryRequest>> violations) {
 		return violations.stream()
 				.map(v -> v.getPropertyPath() + ": " + v.getMessage())
 				.reduce((a, b) -> a + "; " + b)
-				.orElse("Validierung fehlgeschlagen");
+				.orElse("Validation failed");
 	}
 }
