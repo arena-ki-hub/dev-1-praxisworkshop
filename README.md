@@ -1,86 +1,86 @@
-# Schritt 2 — Zeiterfassungs-Einträge
+# Step 2 — Time entries
 
-## Lernziel
+## Learning goal
 
-Testgetriebene Entwicklung (Rot-Grün-Refactor) im Zusammenspiel mit Claude Code: erst die Tests, dann die Implementierung — statt Code schreiben und hinterher prüfen zu lassen.
+Test-driven development (red-green-refactor) together with Claude Code: tests first, then the implementation — instead of writing code and having it checked afterwards.
 
-## Die Methode dieses Schritts
+## The method of this step
 
-Der Skill **`/tdd`** wurde zusammen mit `mattpocock-skills` auf `main` installiert und legt Claude auf den Rot-Grün-Refactor-Zyklus fest: erst ein fehlschlagender Test, dann die kleinste Implementierung, die ihn grün macht, erst danach Refactoring.
+The skill **`/tdd`** was installed on `main` together with `mattpocock-skills` and locks Claude into the red-green-refactor cycle: first a failing test, then the smallest implementation that makes it green, and only then refactoring.
 
-Entscheidend ist die Reihenfolge. Lässt du Claude erst implementieren und danach Tests schreiben, beschreiben die Tests, was der Code tut — auch dann, wenn er eine Regel falsch umsetzt. Ein Test, der vorher rot war und nach der Implementierung grün wird, belegt dagegen, dass genau diese Regel den Ausschlag gibt. Deshalb gilt: Ein Test, der ohne Implementierung schon grün ist, prüft nichts.
+The order is what matters. If you let Claude implement first and write tests afterwards, the tests describe what the code does — even when it implements a rule incorrectly. A test that was red beforehand and turns green after the implementation, on the other hand, proves that exactly this rule makes the difference. That is why the following holds: a test that is already green without an implementation checks nothing.
 
-Für diesen Schritt passt das besonders gut, weil die drei Validierungsregeln vorgegeben sind. Sie lassen sich wörtlich in Testfälle übersetzen, samt der Grenzwerte (0 und 24 Stunden, heute gegen morgen), bevor eine Zeile Produktivcode existiert.
+This fits especially well for this step because the three validation rules are given. They can be translated literally into test cases, including the boundary values (0 and 24 hours, today versus tomorrow), before a single line of production code exists.
 
-**`/grilling`** aus Schritt 1 bleibt nützlich: Bevor du den Plan für die Implementierung freigibst, nimmt der Skill ihn auseinander und legt dir jeden offenen Punkt einzeln mit einer Empfehlung vor.
+**`/grilling`** from step 1 remains useful: before you approve the plan for the implementation, the skill takes it apart and presents every open point one at a time with a recommendation.
 
-## Aufgabe
+## Task
 
-Das Backend soll Zeiterfassungs-Einträge (`TimeEntry`) je Mitarbeiter verwalten. Ein Eintrag hat ein Datum, die Anzahl gebuchter Stunden, eine kurze Tätigkeitsbeschreibung sowie ein Kennzeichen, ob es sich um eine Abwesenheit (z. B. Urlaub) handelt. Die REST-API soll die üblichen CRUD-Operationen anbieten, diesmal im Kontext eines Mitarbeiters (`/api/employees/{employeeId}/time-entries`).
+The backend should manage time entries (`TimeEntry`) per employee. An entry has a date, the number of booked hours, a short task description and a flag indicating whether it is an absence (e.g. vacation). The REST API should offer the usual CRUD operations, this time in the context of an employee (`/api/employees/{employeeId}/time-entries`).
 
-Validiert werden soll dabei:
+The following should be validated:
 
-- Stunden müssen größer als 0 und höchstens 24 sein.
-- Das Datum darf nicht in der Zukunft liegen.
-- Der referenzierte Mitarbeiter muss existieren.
+- Hours must be greater than 0 and at most 24.
+- The date must not be in the future.
+- The referenced employee must exist.
 
-## Empfohlener Workflow
+## Recommended workflow
 
-1. **Die Tests mit `/tdd` schreiben lassen und rot sehen.**
+1. **Have the tests written with `/tdd` and see them fail.**
 
    ```bash
-   /tdd Schreib zuerst die Tests für die Zeiterfassungs-Einträge: die drei Validierungsregeln inklusive Grenzwerte und die CRUD-Operationen. Noch keine Implementierung — ich will die Tests zuerst rot sehen.
+   /tdd First write the tests for the time entries: the three validation rules including boundary values and the CRUD operations. No implementation yet — I want to see the tests fail first.
    ```
 
-   Lass dir die fehlgeschlagenen Tests zeigen, bevor es weitergeht. Läuft einer schon grün, prüft er die Regel nicht.
+   Have the failing tests shown to you before continuing. If one is already green, it does not check the rule.
 
-2. **Den Plan für die Implementierung mit `/grilling` hinterfragen** und erst danach freigeben.
+2. **Challenge the plan for the implementation with `/grilling`** and approve it only afterwards.
 
-3. **Grün und Refactor durchlaufen lassen** — Claude ergänzt nur so viel Code, bis die Tests durchlaufen, und räumt erst danach auf.
+3. **Let it run through green and refactor** — Claude adds only as much code as needed until the tests pass, and only then tidies up.
 
-## Feature selbst testen (Pflicht)
+## Test the feature yourself (mandatory)
 
-Grüne Tests heißen zunächst nur, dass Claudes Code Claudes Tests besteht. Ob die Zeiterfassung wirklich funktioniert, siehst du erst in der laufenden Anwendung.
+Green tests initially only mean that Claude's code passes Claude's tests. You only see whether the time tracking really works in the running application.
 
-1. **App starten** — in einem zweiten Terminal, oder von Claude starten lassen (`Starte die App im Hintergrund und sag mir, wenn sie läuft`):
+1. **Start the app** — in a second terminal, or have Claude start it (`Start the app in the background and tell me when it is running`):
 
    ```bash
    ./mvnw spring-boot:run
    ```
 
-2. **Swagger UI öffnen** — <http://localhost:8080/swagger-ui.html>. Im Dev Container ist Port 8080 weitergeleitet (Reiter „Ports" in VS Code); ein Strg+Klick auf die URL im Terminal öffnet sie direkt.
+2. **Open the Swagger UI** — <http://localhost:8080/swagger-ui.html>. In the Dev Container, port 8080 is forwarded ("Ports" tab in VS Code); a Ctrl+click on the URL in the terminal opens it directly.
 
-3. **Die Endpunkte per „Try it out" durchklicken** — die Seed-Daten enthalten die Mitarbeiter `a.schmidt`, `m.mueller` und `j.klein`, die IDs holst du dir über `GET /api/employees`:
-   - `POST /api/employees/{employeeId}/time-entries`: heutiges Datum, 8 Stunden, Tätigkeit „Kundenprojekt", keine Abwesenheit → Eintrag wird angelegt.
-   - `GET /api/employees/{employeeId}/time-entries`: der Eintrag steht in der Liste.
-   - Einen zweiten Eintrag als Abwesenheit (z. B. Urlaub) anlegen.
-   - Validierung prüfen: 0 Stunden, 25 Stunden, Datum von morgen → jeweils 400 mit verständlicher Meldung.
-   - `POST /api/employees/999/time-entries` (unbekannter Mitarbeiter) → 404, **kein** 500.
-   - Einen Eintrag per `PUT` ändern und per `DELETE` löschen → `GET` zeigt danach die Änderung bzw. den Eintrag nicht mehr.
+3. **Click through the endpoints via "Try it out"** — the seed data contains the employees `a.schmidt`, `m.mueller` and `j.klein`, you get the IDs via `GET /api/employees`:
+   - `POST /api/employees/{employeeId}/time-entries`: today's date, 8 hours, task "Customer project", no absence → entry is created.
+   - `GET /api/employees/{employeeId}/time-entries`: the entry is in the list.
+   - Create a second entry as an absence (e.g. vacation).
+   - Check the validation: 0 hours, 25 hours, tomorrow's date → each 400 with an understandable message.
+   - `POST /api/employees/999/time-entries` (unknown employee) → 404, **not** 500.
+   - Change an entry via `PUT` and delete one via `DELETE` → `GET` then shows the change or no longer shows the entry.
 
-4. **Wenn etwas nicht stimmt** — gib Claude die konkrete Anfrage und die Antwort aus der Swagger UI („25 Stunden liefern 500 statt 400, Response: …") statt nur „geht nicht".
+4. **If something is wrong** — give Claude the concrete request and the response from the Swagger UI ("25 hours returns 500 instead of 400, response: …") instead of just "doesn't work".
 
-## Akzeptanzkriterien
+## Acceptance criteria
 
-- Neue Endpunkte sind über Swagger UI sichtbar und nutzbar.
-- Ungültige Eingaben (Stunden außerhalb 0–24, Datum in der Zukunft, unbekannter Mitarbeiter) liefern passende HTTP-Fehlercodes, keine 500er.
-- `./mvnw test` läuft grün, inkl. neuer Tests für die Validierungsregeln.
-- Du hast die Endpunkte und alle drei Validierungsregeln selbst in der Swagger UI durchgeklickt.
+- New endpoints are visible and usable via the Swagger UI.
+- Invalid input (hours outside 0–24, date in the future, unknown employee) returns appropriate HTTP error codes, no 500s.
+- `./mvnw test` passes, including new tests for the validation rules.
+- You have clicked through the endpoints and all three validation rules yourself in the Swagger UI.
 
-## Weiter
+## Next
 
-Fertig? Dann weiter mit Schritt 3 (Excel-Import).
-
-```bash
-git reset --hard        # verwirft Änderungen an vorhandenen Dateien
-git clean -fd           # entfernt neu angelegte Dateien
-git checkout step-3-de
-```
-
-Statt die Befehle selbst zu tippen, kannst du Claude auch einfach sagen, was passieren soll:
+Done? Then continue with step 3 (Excel import).
 
 ```bash
-Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-3-de.
+git reset --hard        # discards changes to existing files
+git clean -fd           # removes newly created files
+git checkout step-3-en
 ```
 
-Danach in Claude einmal `/clear`: Der Kontext aus diesem Schritt hilft im nächsten nicht und kostet bei jeder Nachricht erneut Tokens.
+Instead of typing the commands yourself, you can also just tell Claude what should happen:
+
+```bash
+Discard all my changes, including newly created files, and switch to the branch step-3-en.
+```
+
+Afterwards, run `/clear` once in Claude: the context from this step does not help in the next one and costs tokens again with every message.
