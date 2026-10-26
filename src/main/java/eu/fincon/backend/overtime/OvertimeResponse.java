@@ -7,7 +7,7 @@ public record OvertimeResponse(
 		Long employeeId,
 		LocalDate from,
 		LocalDate to,
-		BigDecimal sollStunden,
-		BigDecimal istStunden,
-		BigDecimal ueberstunden) {
+		BigDecimal targetHours,
+		BigDecimal actualHours,
+		BigDecimal overtimeHours) {
 }

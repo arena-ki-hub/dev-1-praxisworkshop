@@ -4,8 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 public record EmployeeRequest(
-		@NotBlank(message = "darf nicht leer sein") String firstName,
-		@NotBlank(message = "darf nicht leer sein") String lastName,
-		@NotBlank(message = "darf nicht leer sein") String username,
-		@Positive(message = "muss größer als 0 sein") double weeklyTargetHours) {
+		@NotBlank(message = "must not be empty") String firstName,
+		@NotBlank(message = "must not be empty") String lastName,
+		@NotBlank(message = "must not be empty") String username,
+		@Positive(message = "must be greater than 0") double weeklyTargetHours) {
 }

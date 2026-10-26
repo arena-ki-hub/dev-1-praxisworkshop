@@ -1,30 +1,30 @@
-# Projektkontext: Überstunden-Backend
+# Project context: Overtime backend
 
-## Zweck
-Backend (REST API + Swagger UI) zur Berechnung von Überstunden aus Zeiterfassungsdaten. Kein Frontend, keine Authentifizierung — Fokus liegt auf der Fachlogik und Datenimport.
+## Purpose
+Backend (REST API + Swagger UI) for calculating overtime from time-tracking data. No frontend, no authentication — the focus is on the domain logic and data import.
 
-## Tech-Stack
-- Java 25, Spring Boot 4.1.1 (Module `spring-boot-starter-webmvc`, `-data-jpa`, `-data-rest`, `-validation`)
-- H2 In-Memory-Datenbank (`jdbc:h2:mem:backend`), H2-Konsole unter `/h2-console`
-- Swagger UI via `springdoc-openapi-starter-webmvc-ui` unter `/swagger-ui.html`
+## Tech stack
+- Java 25, Spring Boot 4.1.1 (modules `spring-boot-starter-webmvc`, `-data-jpa`, `-data-rest`, `-validation`)
+- H2 in-memory database (`jdbc:h2:mem:backend`), H2 console at `/h2-console`
+- Swagger UI via `springdoc-openapi-starter-webmvc-ui` at `/swagger-ui.html`
 - Tests: JUnit 5, MockMvc (`spring-boot-starter-test` + `spring-boot-starter-webmvc-test`)
 
-## Konventionen
-- Package je Fachdomäne unter `eu.fincon.backend.<domain>` (z.B. `employee`), mit Entity/Repository/Service/Controller/Exceptions darin.
-- Gemeinsame Fehlerbehandlung in `eu.fincon.backend.common` (`NotFoundException`, `ConflictException`, `GlobalExceptionHandler`, `ApiError`).
-- REST-Endpunkte unter `/api/...`, DTOs als Java Records mit Bean-Validation-Annotationen für Requests. Response: Entities ohne Relationen werden direkt zurückgegeben; Entities mit Relationen (z.B. `TimeEntry` → `Employee`) über ein Response-Record gemappt, um Probleme mit Lazy-Loading/Jackson-Serialisierung zu vermeiden.
-- Seed-Daten in `src/main/resources/data.sql` (Hibernate-Schema wird vor dem Einspielen erzeugt, siehe `spring.jpa.defer-datasource-initialization`).
+## Conventions
+- One package per domain under `eu.fincon.backend.<domain>` (e.g. `employee`), containing entity/repository/service/controller/exceptions.
+- Shared error handling in `eu.fincon.backend.common` (`NotFoundException`, `ConflictException`, `GlobalExceptionHandler`, `ApiError`).
+- REST endpoints under `/api/...`, DTOs as Java records with Bean Validation annotations for requests. Responses: entities without relations are returned directly; entities with relations (e.g. `TimeEntry` → `Employee`) are mapped to a response record to avoid problems with lazy loading/Jackson serialization.
+- Seed data in `src/main/resources/data.sql` (the Hibernate schema is created before it is loaded, see `spring.jpa.defer-datasource-initialization`).
 
-## Domäne
-- **Employee**: Mitarbeiter mit `username` (eindeutig, wird später beim Excel-Import zum Matching genutzt) und `weeklyTargetHours` (Soll-Stunden/Woche).
-- **TimeEntry**: Zeiterfassungs-Eintrag je Mitarbeiter (`date`, `hours`, `taskDescription`, `absence`). `absence=true` markiert Abwesenheiten (z.B. Urlaub) — solche Tage fließen später nicht in die Überstundenberechnung ein.
-- **Excel-Import**: `POST /api/time-entries/import` erwartet ein festes Spaltenlayout (Datum, Username, Stunden, Task, Abwesenheit), siehe `samples/zeiterfassung-import-beispiel.xlsx`. Fehlerhafte/unbekannte Zeilen brechen den Import nicht ab, sondern landen mit Begründung in `skippedRows`. Die Zeilenvalidierung nutzt bewusst denselben `TimeEntryRequest`/Bean-Validation-Mechanismus wie die REST-API (`jakarta.validation.Validator` manuell aufgerufen), um Regeln nicht doppelt zu pflegen.
-- Die Beispieldatei ist bewusst stark vereinfacht und anonymisiert (fiktive Mitarbeiter/Usernames aus `data.sql`) und hat **keinen** Bezug zu echten Firmendaten — das reale Export-Format ist deutlich komplexer (viele weitere Spalten wie Kostenstelle, Tarif, Job Order). Schritt 6 macht das Spalten-Mapping konfigurierbar, damit perspektivisch auch andere Formate importierbar wären.
-- **Überstunden-Berechnung**: `GET /api/employees/{id}/overtime?from=...&to=...`, siehe `OvertimeService` für die maßgebliche Soll/Ist-Regel (Wochenende = 0 Soll, Abwesenheitstage komplett ausgeschlossen, Ist zählt auch Wochenend-Buchungen voll).
-- Weitere Fachlichkeit (konfigurierbares Excel-Mapping) folgt im nächsten Schritt der Übung — siehe README.md.
+## Domain
+- **Employee**: employee with `username` (unique, used later for matching during the Excel import) and `weeklyTargetHours` (target hours per week).
+- **TimeEntry**: time-tracking entry per employee (`date`, `hours`, `taskDescription`, `absence`). `absence=true` marks absences (e.g. vacation) — such days are excluded from the overtime calculation later.
+- **Excel import**: `POST /api/time-entries/import` expects a fixed column layout (Date, Username, Hours, Task, Absence), see `samples/timesheet-import-example.xlsx`. Faulty/unknown rows do not abort the import but end up in `skippedRows` with a reason. Row validation deliberately uses the same `TimeEntryRequest`/Bean Validation mechanism as the REST API (`jakarta.validation.Validator` called manually) so the rules are not maintained twice.
+- The sample file is deliberately heavily simplified and anonymized (fictitious employees/usernames from `data.sql`) and has **no** connection to real company data — the real export format is much more complex (many more columns such as cost center, rate, job order). Step 6 makes the column mapping configurable so that other formats could be imported in the future.
+- **Overtime calculation**: `GET /api/employees/{id}/overtime?from=...&to=...`, see `OvertimeService` for the authoritative target/actual rule (weekend = 0 target, absence days completely excluded, actual hours also count weekend bookings in full).
+- Further domain logic (configurable Excel mapping) follows in the next step of the exercise — see README.md.
 
-> **Hinweis zum aktuellen Stand:** In diesem Stand sind bewusst 1-2 Fehler enthalten, die die oben beschriebene Soll/Ist-Regel verletzen — `./mvnw test` schlägt deshalb aktuell fehl. Details siehe Aufgabenbeschreibung in der README.
+> **Note on the current state:** This state deliberately contains 1-2 bugs that violate the target/actual rule described above — `./mvnw test` therefore currently fails. For details see the task description in the README.
 
-## Bekannte Stolpersteine (Spring Boot 4)
-- `springdoc-openapi-starter-webmvc-ui` braucht eine explizite Version (nicht Teil des Spring-Boot-BOMs); aktuell kompatibel: 3.1.1.
-- `@AutoConfigureMockMvc` liegt in Spring Boot 4 unter dem neuen Package `org.springframework.boot.webmvc.test.autoconfigure` (nicht mehr `org.springframework.boot.test.autoconfigure.web.servlet`).
+## Known pitfalls (Spring Boot 4)
+- `springdoc-openapi-starter-webmvc-ui` needs an explicit version (not part of the Spring Boot BOM); currently compatible: 3.1.1.
+- `@AutoConfigureMockMvc` lives in a new package in Spring Boot 4: `org.springframework.boot.webmvc.test.autoconfigure` (no longer `org.springframework.boot.test.autoconfigure.web.servlet`).

@@ -64,7 +64,7 @@ public class TimeEntryImportService {
 				String username = formatter.formatCellValue(row.getCell(COLUMN_USERNAME)).trim();
 				Employee employee = employeeRepository.findByUsername(username).orElse(null);
 				if (employee == null) {
-					errors.add(new ImportRowError(humanRowNumber, "Unbekannter Mitarbeiter: '%s'".formatted(username)));
+					errors.add(new ImportRowError(humanRowNumber, "Unknown employee: '%s'".formatted(username)));
 					continue;
 				}
 
@@ -72,7 +72,7 @@ public class TimeEntryImportService {
 				try {
 					date = LocalDate.parse(formatter.formatCellValue(row.getCell(COLUMN_DATE)).trim());
 				} catch (DateTimeParseException ex) {
-					errors.add(new ImportRowError(humanRowNumber, "Ungültiges Datum"));
+					errors.add(new ImportRowError(humanRowNumber, "Invalid date"));
 					continue;
 				}
 
@@ -80,7 +80,7 @@ public class TimeEntryImportService {
 				try {
 					hours = new BigDecimal(formatter.formatCellValue(row.getCell(COLUMN_HOURS)).trim().replace(",", "."));
 				} catch (NumberFormatException ex) {
-					errors.add(new ImportRowError(humanRowNumber, "Ungültige Stundenzahl"));
+					errors.add(new ImportRowError(humanRowNumber, "Invalid number of hours"));
 					continue;
 				}
 
@@ -108,13 +108,13 @@ public class TimeEntryImportService {
 
 	private static boolean isYes(String value) {
 		String normalized = value.trim().toLowerCase();
-		return normalized.equals("ja") || normalized.equals("yes") || normalized.equals("true");
+		return normalized.equals("yes") || normalized.equals("true");
 	}
 
 	private static String describe(Set<ConstraintViolation<TimeEntryRequest>> violations) {
 		return violations.stream()
 				.map(v -> v.getPropertyPath() + ": " + v.getMessage())
 				.reduce((a, b) -> a + "; " + b)
-				.orElse("Validierung fehlgeschlagen");
+				.orElse("Validation failed");
 	}
 }

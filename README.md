@@ -1,50 +1,50 @@
-# Schritt 5 — Bugfixing
+# Step 5 — Bugfixing
 
-## Lernziel
+## Learning goal
 
-Debugging-Workflow mit Claude Code.
+Debugging workflow with Claude Code.
 
-## Die Methode dieses Schritts
+## The method of this step
 
-Schau dir dazu den Skill `mattpocock-skills:diagnosing-bugs` an.
+Take a look at the `mattpocock-skills:diagnosing-bugs` skill.
 
-## Ausgangslage
+## Starting point
 
-In diesem Stand schlägt `./mvnw test` fehl. In der Überstunden-Berechnung aus Schritt 4 sind gezielt Fehler enthalten, die die Soll/Ist-Regel aus Schritt 4 verletzen (die Regel selbst steht unverändert im Javadoc von `OvertimeService` und in `AGENTS.md`).
+In this state `./mvnw test` fails. The overtime calculation from step 4 contains deliberate bugs that violate the target/actual rule from step 4 (the rule itself is unchanged in the Javadoc of `OvertimeService` and in `AGENTS.md`).
 
-## Aufgabe
+## Task
 
-Finde und behebe die Fehler, bis alle Tests wieder grün sind — insbesondere `OvertimeControllerTest`. Es kann mehr als einen Fehler geben; verlass dich nicht darauf, dass mit dem ersten Fix schon alles grün ist.
+Find and fix the bugs until all tests are green again — in particular `OvertimeControllerTest`. There may be more than one bug; don't rely on everything being green after the first fix.
 
-## Empfohlener Workflow
+## Recommended workflow
 
-Nicht direkt drauflos fixen lassen. Erst den fehlschlagenden Test und die Fehlermeldung genau lesen, eine Hypothese bilden, den bestehenden Code gegen die dokumentierte Soll/Ist-Regel prüfen — dann gezielt fixen. Ergänze bei Bedarf weitere Tests, die den jeweiligen Fehler eindeutig belegen.
+Don't just let it start fixing right away. First read the failing test and the error message carefully, form a hypothesis, check the existing code against the documented target/actual rule — then fix in a targeted way. If needed, add further tests that clearly prove each bug.
 
-## Feature selbst testen (Pflicht)
+## Test the feature yourself (mandatory)
 
-Grüne Tests beweisen hier wenig — ein Fix kann auch einfach den Test passend machen, statt die Fachlogik zu reparieren. Prüf die Berechnung deshalb an der laufenden Anwendung.
+Green tests prove little here — a fix can also simply make the test pass instead of repairing the domain logic. So check the calculation in the running application.
 
-1. **App starten** — in einem zweiten Terminal, oder von Claude im Hintergrund starten lassen:
+1. **Start the app** — in a second terminal, or have Claude start it in the background:
 
    ```bash
    ./mvnw spring-boot:run
    ```
 
-2. **Swagger UI öffnen** — <http://localhost:8080/swagger-ui.html>. Im Dev Container ist Port 8080 weitergeleitet (siehe Reiter „Ports").
+2. **Open the Swagger UI** — <http://localhost:8080/swagger-ui.html>. In the Dev Container, port 8080 is forwarded (see the "Ports" tab).
 
-3. **Testdaten anlegen** — `POST /api/time-entries/import` mit `samples/zeiterfassung-import-beispiel.xlsx`. Die ID von `a.schmidt` holst du dir über `GET /api/employees`.
+3. **Create test data** — `POST /api/time-entries/import` with `samples/timesheet-import-example.xlsx`. You get the ID of `a.schmidt` via `GET /api/employees`.
 
-4. **Überstunden abrufen und nachrechnen** — `GET /api/employees/{id}/overtime?from=2026-08-31&to=2026-09-06` für `a.schmidt` aufrufen und selbst nachrechnen:
-   - **Soll 32 h:** Mo 31.08., Di 01.09., Do 03.09. und Fr 04.09. mit je 8 h. Der Urlaubstag Mi 02.09. fällt komplett raus, Sa/So haben 0 Soll-Stunden.
-   - **Ist 20 h:** 8 h + 8 h + die 4 h vom Samstag 05.09. — der Urlaubstag zählt nicht.
-   - **Überstunden −12 h.**
+4. **Query the overtime and recalculate it** — call `GET /api/employees/{id}/overtime?from=2026-08-31&to=2026-09-06` for `a.schmidt` and recalculate it yourself:
+   - **Target 32 h:** Mon 31.08., Tue 01.09., Thu 03.09. and Fri 04.09. with 8 h each. The vacation day Wed 02.09. is excluded completely, Sat/Sun have 0 target hours.
+   - **Actual 20 h:** 8 h + 8 h + the 4 h from Saturday 05.09. — the vacation day does not count.
+   - **Overtime −12 h.**
 
-   Genau hier zeigen sich die eingebauten Fehler: Wochenenden, die in die Soll-Stunden wandern, oder Abwesenheitsstunden, die in den Ist-Stunden landen.
+   This is exactly where the planted bugs show up: weekends that end up in the target hours, or absence hours that end up in the actual hours.
 
-5. **Wenn etwas nicht stimmt** — gib Claude die Anfrage, die Antwort und deine erwartete Rechnung und lass den nächsten Fix von einem Test absichern.
+5. **If something is wrong** — give Claude the request, the response and your expected calculation and have the next fix secured by a test.
 
-## Akzeptanzkriterien
+## Acceptance criteria
 
-- `./mvnw test` läuft komplett grün.
-- Die Soll/Ist-Regel aus Schritt 4 ist wieder korrekt umgesetzt (insbesondere: Wochenenden zählen nicht in die Soll-Stunden, Abwesenheitstage fließen nicht in die Ist-Stunden ein).
-- Du hast die Berechnung nach dem Fix selbst in der laufenden Anwendung geprüft (für `a.schmidt` vom 31.08. bis 06.09.2026: Soll 32 h, Ist 20 h, Überstunden −12 h).
+- `./mvnw test` passes completely.
+- The target/actual rule from step 4 is implemented correctly again (in particular: weekends do not count towards the target hours, absence days do not flow into the actual hours).
+- After the fix you have checked the calculation yourself in the running application (for `a.schmidt` from 31.08. to 06.09.2026: target 32 h, actual 20 h, overtime −12 h).

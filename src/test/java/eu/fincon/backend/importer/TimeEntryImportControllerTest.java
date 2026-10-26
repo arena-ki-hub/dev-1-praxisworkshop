@@ -20,7 +20,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @AutoConfigureMockMvc
 class TimeEntryImportControllerTest {
 
-	private static final Path SAMPLE_FILE = Path.of("samples", "zeiterfassung-import-beispiel.xlsx");
+	private static final Path SAMPLE_FILE = Path.of("samples", "timesheet-import-example.xlsx");
 
 	@Autowired
 	private MockMvc mockMvc;
@@ -30,7 +30,7 @@ class TimeEntryImportControllerTest {
 	@Test
 	void importTimeEntries_importsKnownEmployeesAndSkipsUnknownUsername() throws Exception {
 		byte[] content = Files.readAllBytes(SAMPLE_FILE);
-		MockMultipartFile file = new MockMultipartFile("file", "zeiterfassung-import-beispiel.xlsx",
+		MockMultipartFile file = new MockMultipartFile("file", "timesheet-import-example.xlsx",
 				"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", content);
 
 		String response = mockMvc.perform(multipart("/api/time-entries/import").file(file))
@@ -41,6 +41,6 @@ class TimeEntryImportControllerTest {
 
 		assertThat(result.importedCount()).isEqualTo(9);
 		assertThat(result.skippedRows()).hasSize(1);
-		assertThat(result.skippedRows().getFirst().reason()).contains("x.unbekannt");
+		assertThat(result.skippedRows().getFirst().reason()).contains("x.unknown");
 	}
 }
