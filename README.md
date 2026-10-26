@@ -66,4 +66,4 @@ Nach einem Refactoring ist der wichtigste Test der, dass das alte Verhalten unve
 - `./mvnw test` läuft grün, inkl. eines Tests mit abweichendem Spalten-Mapping.
 - Du hast beide Importe (Default-Mapping und eigenes Mapping) sowie den Fehlerfall selbst in der laufenden Anwendung ausprobiert.
 
-Das ist der letzte Pflichtschritt dieser Übung — glückwunsch! Die vollständige Referenzlösung findest du in `step-7`, eine optionale Zusatzübung (eigenen Skill bauen) in `step-8`.
+Das ist der letzte Pflichtschritt dieser Übung — glückwunsch! Die vollständige Referenzlösung findest du in `step-7-de`, eine optionale Zusatzübung (eigenen Skill bauen) in `step-8-de`.
