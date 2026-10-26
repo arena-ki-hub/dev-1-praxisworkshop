@@ -17,8 +17,8 @@ spring:
 import:
   excel:
     column-mapping:
-      date: Datum
+      date: Date
       username: Username
-      hours: Stunden
+      hours: Hours
       task: Task
-      absence: Abwesenheit
+      absence: Absence

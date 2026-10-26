@@ -39,18 +39,18 @@ class OvertimeControllerTest {
 		LocalDate saturday = monday.plusDays(5);
 		LocalDate sunday = monday.plusDays(6);
 
-		createTimeEntry(employeeId, monday, "8", "Kundenprojekt", false);
-		createTimeEntry(employeeId, tuesday, "8", "Kundenprojekt", false);
-		createTimeEntry(employeeId, wednesday, "8", "Urlaub", true);
-		createTimeEntry(employeeId, saturday, "4", "Wochenend-Support", false);
+		createTimeEntry(employeeId, monday, "8", "Customer project", false);
+		createTimeEntry(employeeId, tuesday, "8", "Customer project", false);
+		createTimeEntry(employeeId, wednesday, "8", "Vacation", true);
+		createTimeEntry(employeeId, saturday, "4", "Weekend support", false);
 
 		mockMvc.perform(get("/api/employees/{id}/overtime", employeeId)
 						.param("from", monday.toString())
 						.param("to", sunday.toString()))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$.sollStunden").value(32.0))
-				.andExpect(jsonPath("$.istStunden").value(20.0))
-				.andExpect(jsonPath("$.ueberstunden").value(-12.0));
+				.andExpect(jsonPath("$.targetHours").value(32.0))
+				.andExpect(jsonPath("$.actualHours").value(20.0))
+				.andExpect(jsonPath("$.overtimeHours").value(-12.0));
 	}
 
 	@Test

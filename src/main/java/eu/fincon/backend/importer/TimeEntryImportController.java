@@ -23,10 +23,10 @@ public class TimeEntryImportController {
 	}
 
 	/**
-	 * @param mapping optionales JSON-Spalten-Mapping, z.B.
-	 *                {@code {"date":"Datum","username":"User","hours":"Std","task":"Taetigkeit","absence":"Urlaub"}}.
-	 *                Fehlt der Parameter, gilt das Default-Mapping aus
-	 *                {@code application.yaml} (`import.excel.column-mapping`).
+	 * @param mapping optional JSON column mapping, e.g.
+	 *                {@code {"date":"Date","username":"User","hours":"Hrs","task":"Activity","absence":"Vacation"}}.
+	 *                If the parameter is missing, the default mapping from
+	 *                {@code application.yaml} (`import.excel.column-mapping`) applies.
 	 */
 	@PostMapping("/api/time-entries/import")
 	public ImportResult importTimeEntries(
@@ -42,7 +42,7 @@ public class TimeEntryImportController {
 		try {
 			return objectMapper.readValue(mapping, ColumnMapping.class);
 		} catch (JsonProcessingException ex) {
-			throw new BadRequestException("Ungültiges Spalten-Mapping: " + ex.getOriginalMessage());
+			throw new BadRequestException("Invalid column mapping: " + ex.getOriginalMessage());
 		}
 	}
 }

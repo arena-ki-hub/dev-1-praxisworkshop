@@ -17,9 +17,9 @@ import eu.fincon.backend.timeentry.TimeEntry;
 import eu.fincon.backend.timeentry.TimeEntryRepository;
 
 /**
- * Regel: Sa/So haben 0 Soll-Stunden, Werktage {@code weeklyTargetHours / 5}.
- * Tage mit einer Abwesenheits-Buchung (Urlaub etc.) werden komplett aus der
- * Berechnung ausgeschlossen (weder Soll- noch Ist-Stunden).
+ * Rule: Sat/Sun have 0 target hours, workdays {@code weeklyTargetHours / 5}.
+ * Days with an absence entry (vacation etc.) are excluded from the
+ * calculation entirely (neither target nor actual hours).
  */
 @Service
 public class OvertimeService {
@@ -36,7 +36,7 @@ public class OvertimeService {
 
 	public OvertimeResponse calculate(Long employeeId, LocalDate from, LocalDate to) {
 		if (from.isAfter(to)) {
-			throw new BadRequestException("'from' darf nicht nach 'to' liegen");
+			throw new BadRequestException("'from' must not be after 'to'");
 		}
 		Employee employee = employeeService.findById(employeeId);
 		BigDecimal dailyTargetHours = BigDecimal.valueOf(employee.getWeeklyTargetHours())
@@ -46,8 +46,8 @@ public class OvertimeService {
 		Map<LocalDate, List<TimeEntry>> entriesByDate = entries.stream()
 				.collect(Collectors.groupingBy(TimeEntry::getDate));
 
-		BigDecimal sollStunden = BigDecimal.ZERO;
-		BigDecimal istStunden = BigDecimal.ZERO;
+		BigDecimal targetHours = BigDecimal.ZERO;
+		BigDecimal actualHours = BigDecimal.ZERO;
 
 		for (LocalDate date = from; !date.isAfter(to); date = date.plusDays(1)) {
 			List<TimeEntry> dayEntries = entriesByDate.getOrDefault(date, List.of());
@@ -58,16 +58,16 @@ public class OvertimeService {
 
 			boolean isWeekend = date.getDayOfWeek() == DayOfWeek.SATURDAY || date.getDayOfWeek() == DayOfWeek.SUNDAY;
 			if (!isWeekend) {
-				sollStunden = sollStunden.add(dailyTargetHours);
+				targetHours = targetHours.add(dailyTargetHours);
 			}
 
 			BigDecimal dayHours = dayEntries.stream()
 					.map(TimeEntry::getHours)
 					.reduce(BigDecimal.ZERO, BigDecimal::add);
-			istStunden = istStunden.add(dayHours);
+			actualHours = actualHours.add(dayHours);
 		}
 
-		BigDecimal ueberstunden = istStunden.subtract(sollStunden);
-		return new OvertimeResponse(employeeId, from, to, sollStunden, istStunden, ueberstunden);
+		BigDecimal overtimeHours = actualHours.subtract(targetHours);
+		return new OvertimeResponse(employeeId, from, to, targetHours, actualHours, overtimeHours);
 	}
 }
