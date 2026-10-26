@@ -37,7 +37,7 @@ class TimeEntryControllerTest {
 
 	@Test
 	void create_persistsEntryForEmployee() throws Exception {
-		TimeEntryRequest request = new TimeEntryRequest(LocalDate.now(), new BigDecimal("6.5"), "Testaufgabe", false);
+		TimeEntryRequest request = new TimeEntryRequest(LocalDate.now(), new BigDecimal("6.5"), "Test task", false);
 
 		mockMvc.perform(post("/api/employees/1/time-entries")
 						.contentType(MediaType.APPLICATION_JSON)
@@ -49,7 +49,7 @@ class TimeEntryControllerTest {
 
 	@Test
 	void create_rejectsUnknownEmployee() throws Exception {
-		TimeEntryRequest request = new TimeEntryRequest(LocalDate.now(), new BigDecimal("6.5"), "Testaufgabe", false);
+		TimeEntryRequest request = new TimeEntryRequest(LocalDate.now(), new BigDecimal("6.5"), "Test task", false);
 
 		mockMvc.perform(post("/api/employees/999999/time-entries")
 						.contentType(MediaType.APPLICATION_JSON)

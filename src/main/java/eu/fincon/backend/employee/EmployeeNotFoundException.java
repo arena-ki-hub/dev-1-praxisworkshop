@@ -5,6 +5,6 @@ import eu.fincon.backend.common.NotFoundException;
 public class EmployeeNotFoundException extends NotFoundException {
 
 	public EmployeeNotFoundException(Long id) {
-		super("Mitarbeiter mit ID %d nicht gefunden".formatted(id));
+		super("Employee with ID %d not found".formatted(id));
 	}
 }
