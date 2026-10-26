@@ -1,83 +1,83 @@
-# Schritt 4 — Überstunden-Berechnung
+# Step 4 — Overtime calculation
 
-## Lernziel
+## Learning goal
 
-Plan Mode bei einer fachlich komplexeren Aufgabe mit mehreren Teilschritten.
+Plan Mode for a more complex domain task with several subtasks.
 
-## Die Methode dieses Schritts
+## The method of this step
 
-**Plan Mode** (`Shift+Tab`, bis in der Eingabezeile der Plan Mode steht) bei einer Aufgabe mit mehreren Teilschritten: Datumsbereich iterieren, Wochenenden erkennen, Abwesenheiten ausschließen, Summen bilden.
+**Plan Mode** (`Shift+Tab` until the input line shows Plan Mode) for a task with several subtasks: iterate over a date range, detect weekends, exclude absences, calculate sums.
 
-**`/grilling`** ist das Werkzeug, um die Aufgabe vor der Umsetzung gründlich zu hinterfragen, z. B.: Was passiert an einem Werktag ganz ohne Buchung? Was, wenn `from` nach `to` liegt?
+**`/grilling`** is the tool for questioning the task thoroughly before implementing it, e.g.: what happens on a weekday with no booking at all? What if `from` is after `to`?
 
-## Aufgabe
+## Task
 
-Baue einen Endpoint, der für einen Mitarbeiter und einen Zeitraum die Überstunden berechnet: `GET /api/employees/{id}/overtime?from=...&to=...`.
+Build an endpoint that calculates the overtime for an employee and a period: `GET /api/employees/{id}/overtime?from=...&to=...`.
 
-Berechnungsregel:
+Calculation rule:
 
-- Samstag/Sonntag haben 0 Soll-Stunden.
-- An Werktagen gilt Soll-Stunden = `weeklyTargetHours / 5`.
-- Tage mit einer Abwesenheits-Buchung (`absence=true`, z. B. Urlaub) werden **komplett** aus der Berechnung ausgeschlossen (weder Soll- noch Ist-Stunden für diesen Tag).
-- Ist-Stunden = Summe der gebuchten Stunden aller Nicht-Abwesenheits-Einträge im Zeitraum (auch an Wochenenden, falls dort gebucht wurde).
-- Überstunden = Ist-Stunden − Soll-Stunden.
+- Saturday/Sunday have 0 target hours.
+- On weekdays, target hours = `weeklyTargetHours / 5`.
+- Days with an absence booking (`absence=true`, e.g. vacation) are excluded from the calculation **completely** (neither target nor actual hours for that day).
+- Actual hours = sum of the booked hours of all non-absence entries in the period (also on weekends, if something was booked there).
+- Overtime = actual hours − target hours.
 
-## Empfohlener Workflow
+## Recommended workflow
 
-1. **In den Plan Mode wechseln** (`Shift+Tab`, bis in der Eingabezeile der Plan Mode steht).
+1. **Switch to Plan Mode** (`Shift+Tab` until the input line shows Plan Mode).
 
-2. **Die Aufgabe direkt mit `/grilling` starten** — kein separater Plan-Prompt nötig, der Skill befragt dich zur Aufgabe und legt dir jeden offenen Punkt einzeln mit einer Empfehlung vor:
+2. **Start the task directly with `/grilling`** — no separate plan prompt needed, the skill interviews you about the task and presents every open point one at a time with a recommendation:
 
    ```bash
-   /grilling Baue GET /api/employees/{id}/overtime?from=...&to=... mit der Berechnungsregel aus der README. Achte besonders auf Werktage ohne Buchung und auf einen vertauschten Zeitraum.
+   /grilling Build GET /api/employees/{id}/overtime?from=...&to=... with the calculation rule from the README. Pay special attention to weekdays without a booking and to a swapped period.
    ```
 
-3. **Den Plan freigeben und umsetzen lassen** — danach implementiert Claude den Endpoint und lässt `./mvnw test` laufen. Weiter geht es mit dem nächsten Abschnitt: Endpoint selbst ausprobieren.
+3. **Approve the plan and let it be implemented** — after that Claude implements the endpoint and runs `./mvnw test`. Continue with the next section: try out the endpoint yourself.
 
-## Feature selbst testen (Pflicht)
+## Test the feature yourself (mandatory)
 
-Bei einer Rechenregel reicht „Tests sind grün" nicht — rechne das Ergebnis der laufenden Anwendung einmal selbst nach.
+For a calculation rule, "tests are green" is not enough — recalculate the result of the running application yourself once.
 
-1. **App starten** — in einem zweiten Terminal, oder von Claude im Hintergrund starten lassen:
+1. **Start the app** — in a second terminal, or have Claude start it in the background:
 
    ```bash
    ./mvnw spring-boot:run
    ```
 
-2. **Swagger UI öffnen** — <http://localhost:8080/swagger-ui.html>. Im Dev Container ist Port 8080 weitergeleitet (siehe Reiter „Ports").
+2. **Open the Swagger UI** — <http://localhost:8080/swagger-ui.html>. In the Dev Container, port 8080 is forwarded (see the "Ports" tab).
 
-3. **Testdaten anlegen** — `POST /api/time-entries/import` mit `samples/zeiterfassung-import-beispiel.xlsx` (oder ein paar Einträge von Hand über `POST /api/employees/{employeeId}/time-entries`). Die ID von `a.schmidt` holst du dir über `GET /api/employees`.
+3. **Create test data** — `POST /api/time-entries/import` with `samples/timesheet-import-example.xlsx` (or a few entries by hand via `POST /api/employees/{employeeId}/time-entries`). You get the ID of `a.schmidt` via `GET /api/employees`.
 
-4. **Überstunden abrufen und nachrechnen** — `GET /api/employees/{id}/overtime?from=2026-08-31&to=2026-09-06` für `a.schmidt` aufrufen und das Ergebnis gegen die Regel prüfen:
-   - **Soll 32 h:** Mo 31.08., Di 01.09., Do 03.09. und Fr 04.09. mit je 8 h. Der Urlaubstag Mi 02.09. fällt komplett raus, Sa/So haben 0 Soll-Stunden.
-   - **Ist 20 h:** 8 h + 8 h + 4 h — die 4 h am Samstag 05.09. zählen mit, der Urlaubstag nicht.
-   - **Überstunden −12 h.**
-   - Fehlerfälle: `from` nach `to` → 400, `GET /api/employees/999/overtime?...` → 404, **kein** 500.
+4. **Query the overtime and recalculate it** — call `GET /api/employees/{id}/overtime?from=2026-08-31&to=2026-09-06` for `a.schmidt` and check the result against the rule:
+   - **Target 32 h:** Mon 31.08., Tue 01.09., Thu 03.09. and Fri 04.09. with 8 h each. The vacation day Wed 02.09. is excluded completely, Sat/Sun have 0 target hours.
+   - **Actual 20 h:** 8 h + 8 h + 4 h — the 4 h on Saturday 05.09. count, the vacation day does not.
+   - **Overtime −12 h.**
+   - Error cases: `from` after `to` → 400, `GET /api/employees/999/overtime?...` → 404, **not** 500.
 
-5. **Wenn etwas nicht stimmt** — gib Claude die Anfrage, die Antwort und deine Rechnung („erwartet Soll 32 / Ist 20, geliefert …"), dann hat es etwas Konkretes zum Nachrechnen.
+5. **If something is wrong** — give Claude the request, the response and your calculation ("expected target 32 / actual 20, got …"), so it has something concrete to recalculate.
 
-## Akzeptanzkriterien
+## Acceptance criteria
 
-- Endpoint liefert `{ employeeId, from, to, sollStunden, istStunden, ueberstunden }`.
-- Ein Werktag ganz ohne Buchung zählt voll als Soll-Stunden (führt zu Minderstunden), ein Wochenendtag mit Buchung zählt voll als Überstunden.
-- Ein vertauschter Zeitraum (`from` nach `to`) liefert HTTP 400, ein unbekannter Mitarbeiter HTTP 404.
-- `./mvnw test` läuft grün, inkl. eines Tests mit gemischtem Szenario (Werktage, ein Urlaubstag, ein Wochenendtag mit Buchung).
-- Du hast den Endpoint selbst in der laufenden Anwendung aufgerufen und das Ergebnis nachgerechnet (für `a.schmidt` vom 31.08. bis 06.09.2026: Soll 32 h, Ist 20 h, Überstunden −12 h).
+- The endpoint returns `{ employeeId, from, to, targetHours, actualHours, overtimeHours }`.
+- A weekday with no booking at all counts fully as target hours (leading to undertime), a weekend day with a booking counts fully as overtime.
+- A swapped period (`from` after `to`) returns HTTP 400, an unknown employee HTTP 404.
+- `./mvnw test` passes, including a test with a mixed scenario (weekdays, one vacation day, one weekend day with a booking).
+- You have called the endpoint yourself in the running application and recalculated the result (for `a.schmidt` from 31.08. to 06.09.2026: target 32 h, actual 20 h, overtime −12 h).
 
-## Weiter
+## Next
 
-Fertig? Dann weiter mit Schritt 5.
-
-```bash
-git reset --hard        # verwirft Änderungen an vorhandenen Dateien
-git clean -fd           # entfernt neu angelegte Dateien
-git checkout step-5-de
-```
-
-Statt die Befehle selbst zu tippen, kannst du Claude auch einfach sagen, was passieren soll:
+Done? Then continue with step 5.
 
 ```bash
-Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-5-de.
+git reset --hard        # discards changes to existing files
+git clean -fd           # removes newly created files
+git checkout step-5-en
 ```
 
-Danach in Claude einmal `/clear`: Der Kontext aus diesem Schritt hilft im nächsten nicht und kostet bei jeder Nachricht erneut Tokens.
+Instead of typing the commands yourself, you can also just tell Claude what should happen:
+
+```bash
+Discard all my changes, including newly created files, and switch to the branch step-5-en.
+```
+
+Afterwards, run `/clear` once in Claude: the context from this step does not help in the next one and costs tokens again with every message.
