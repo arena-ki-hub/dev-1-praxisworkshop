@@ -71,13 +71,13 @@ Fertig? Dann weiter mit Schritt 5.
 ```bash
 git reset --hard        # verwirft Änderungen an vorhandenen Dateien
 git clean -fd           # entfernt neu angelegte Dateien
-git checkout step-5
+git checkout step-5-de
 ```
 
 Statt die Befehle selbst zu tippen, kannst du Claude auch einfach sagen, was passieren soll:
 
 ```bash
-Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-5.
+Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-5-de.
 ```
 
 Danach in Claude einmal `/clear`: Der Kontext aus diesem Schritt hilft im nächsten nicht und kostet bei jeder Nachricht erneut Tokens.
