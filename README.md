@@ -5,20 +5,20 @@ Dieses Repository ist die Code-Basis für den Praxisworkshop zu Agentischem Arbe
 Die Übung ist in mehrere aufeinander aufbauende Schritte gegliedert, die jeweils auf einem eigenen Branch liegen:
 
 - **main** (dieser Branch): Einstieg in Claude Code (Installation, Statuszeile, `AGENTS.md`, Skills) — Ziel: Grundlagen für die folgenden Übungsschritte legen
-- **step-1**: Mitarbeiter-Verwaltung + Swagger UI — Ziel: Plan Mode & strukturiertes Prompting
-- **step-2**: Zeiterfassungs-Einträge — Ziel: Testgetriebene Entwicklung (Rot-Grün-Refactor)
-- **step-3**: Excel-Import — Ziel: Plan Mode beim Einbinden einer neuen Dependency und einem komplexeren Feature
-- **step-4**: Überstunden-Berechnung — Ziel: Plan Mode bei einer fachlich komplexeren Aufgabe mit mehreren Teilschritten
-- **step-5**: Bugfixing — Ziel: Debugging-Workflow
-- **step-6**: Konfigurierbares Spalten-Mapping für den Excel-Import — Ziel: Code Review vor einem Refactoring, Subagents
-- **step-7**: Vollständige Referenzlösung — Kontrollbranch zum Vergleich, kein eigener Übungsschritt
-- **step-8** (optional): Eigenen Skill bauen — Ziel: einen wiederkehrenden Ablauf als Skill verpacken
+- **step-1-de**: Mitarbeiter-Verwaltung + Swagger UI — Ziel: Plan Mode & strukturiertes Prompting
+- **step-2-de**: Zeiterfassungs-Einträge — Ziel: Testgetriebene Entwicklung (Rot-Grün-Refactor)
+- **step-3-de**: Excel-Import — Ziel: Plan Mode beim Einbinden einer neuen Dependency und einem komplexeren Feature
+- **step-4-de**: Überstunden-Berechnung — Ziel: Plan Mode bei einer fachlich komplexeren Aufgabe mit mehreren Teilschritten
+- **step-5-de**: Bugfixing — Ziel: Debugging-Workflow
+- **step-6-de**: Konfigurierbares Spalten-Mapping für den Excel-Import — Ziel: Code Review vor einem Refactoring, Subagents
+- **step-7-de**: Vollständige Referenzlösung — Kontrollbranch zum Vergleich, kein eigener Übungsschritt
+- **step-8-de** (optional): Eigenen Skill bauen — Ziel: einen wiederkehrenden Ablauf als Skill verpacken
 
 Jeder Übungsschritt endet mit einem manuellen Test: App starten, Swagger UI im Browser öffnen, das neue Feature selbst durchklicken. Warum das zur Aufgabe gehört und wie es abläuft, steht unten unter „Features selbst testen".
 
 # Arbeiten mit den Übungsschritten
 
-Jeder Schritt liegt auf einem eigenen Branch und bringt seinen eigenen Ausgangsstand mit: `step-2` enthält bereits die fertige Lösung aus Schritt 1, `step-3` die aus Schritt 2 und so weiter. Du kannst also an jeder Stelle einsteigen — aber nichts aus einem Schritt in den nächsten mitnehmen. **Beim Wechsel wird deine Arbeit verworfen, und das ist beabsichtigt.**
+Jeder Schritt liegt auf einem eigenen Branch und bringt seinen eigenen Ausgangsstand mit: `step-2-de` enthält bereits die fertige Lösung aus Schritt 1, `step-3-de` die aus Schritt 2 und so weiter. Du kannst also an jeder Stelle einsteigen — aber nichts aus einem Schritt in den nächsten mitnehmen. **Beim Wechsel wird deine Arbeit verworfen, und das ist beabsichtigt.**
 
 Die Befehle für den Wechsel stehen am Ende jedes Schritts unter „Weiter" — du kannst ihn auch einfach von Claude erledigen lassen.
 
@@ -173,13 +173,13 @@ Fertig? Dann weiter mit Schritt 1 (Mitarbeiter-Verwaltung + Swagger UI).
 ```bash
 git reset --hard        # verwirft Änderungen an vorhandenen Dateien
 git clean -fd           # entfernt neu angelegte Dateien
-git checkout step-1
+git checkout step-1-de
 ```
 
 Statt die Befehle selbst zu tippen, kannst du Claude auch einfach sagen, was passieren soll:
 
 ```bash
-Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-1.
+Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-1-de.
 ```
 
 Deine `AGENTS.md` und `CLAUDE.md` gehen dabei verloren — jeder Übungsschritt bringt aber bereits eine eigene mit.
