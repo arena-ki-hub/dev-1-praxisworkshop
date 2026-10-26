@@ -1,8 +1,10 @@
+🇬🇧 [English version](README.en.md)
+
 # Projektüberblick
 
 Dieses Repository ist die Code-Basis für den Praxisworkshop zu Agentischem Arbeiten: ein einfaches Spring-Boot-Backend, das Überstunden aus Zeiterfassungsdaten berechnet (Mitarbeiter-Verwaltung, Zeiterfassungs-Einträge, Excel-Import, Überstunden-Berechnung — fachliche Details stehen in `AGENTS.md`).
 
-Die Übung ist in mehrere aufeinander aufbauende Schritte gegliedert, die jeweils auf einem eigenen Branch liegen:
+Die Übung ist in mehrere aufeinander aufbauende Schritte gegliedert, die jeweils auf einem eigenen Branch liegen. Jeden Schritt gibt es in zwei Sprachversionen: `-de` (Deutsch) und `-en` (Englisch). Diese README gehört zur deutschen Version, die Links unten zeigen daher auf die `-de`-Branches.
 
 - **main** (dieser Branch): Einstieg in Claude Code (Installation, Statuszeile, `AGENTS.md`, Skills) — Ziel: Grundlagen für die folgenden Übungsschritte legen
 - **step-1-de**: Mitarbeiter-Verwaltung + Swagger UI — Ziel: Plan Mode & strukturiertes Prompting
