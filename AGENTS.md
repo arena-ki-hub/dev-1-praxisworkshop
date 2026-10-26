@@ -1,11 +1,11 @@
-# Projektkontext: Überstunden-Backend
+# Project context: Overtime backend
 
-## Zweck
-Backend (REST API + Swagger UI) zur Berechnung von Überstunden aus Zeiterfassungsdaten. Kein Frontend, keine Authentifizierung — Fokus liegt auf der Fachlogik und Datenimport.
+## Purpose
+Backend (REST API + Swagger UI) for calculating overtime from time-tracking data. No frontend, no authentication — the focus is on the domain logic and data import.
 
-## Tech-Stack
-- Java 25, Spring Boot 4.1.1 (Module `spring-boot-starter-webmvc`, `-data-jpa`, `-data-rest`)
-- H2 In-Memory-Datenbank
+## Tech stack
+- Java 25, Spring Boot 4.1.1 (modules `spring-boot-starter-webmvc`, `-data-jpa`, `-data-rest`)
+- H2 in-memory database
 
-## Stand
-Noch nicht begonnen — die Fachlichkeit (Mitarbeiter, Zeiterfassung, Excel-Import, Überstundenberechnung) entsteht Schritt für Schritt in der Übung, siehe README.md. Diese Datei wird mit jedem Schritt fortgeschrieben.
+## Status
+Not started yet — the domain logic (employees, time tracking, Excel import, overtime calculation) is built up step by step in the exercise, see README.md. This file is updated with every step.
