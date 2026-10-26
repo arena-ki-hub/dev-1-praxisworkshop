@@ -1,69 +1,69 @@
-# Schritt 6 — Konfigurierbares Spalten-Mapping für den Excel-Import
+# Step 6 — Configurable column mapping for the Excel import
 
-## Lernziel
+## Learning goal
 
-Code Review vor einem Refactoring sowie Subagents, um den eigenen Kontext schlank zu halten.
+Code review before a refactoring, and subagents to keep your own context lean.
 
-## Die Methode dieses Schritts
+## The method of this step
 
-Schau dir dazu den Skill `code-review` bzw. `simplify` an.
+Take a look at the `code-review` or `simplify` skill.
 
-**Subagents:** Ein Subagent ist eine eigene Claude-Instanz mit eigenem, frischem Kontextfenster. Claude gibt ihm eine Teilaufgabe, er liest selbstständig die nötigen Dateien und liefert nur eine Zusammenfassung zurück. Die Dateien, die er gelesen hat, landen also nicht in deinem Hauptkontext.
+**Subagents:** A subagent is a separate Claude instance with its own fresh context window. Claude hands it a subtask, it reads the necessary files on its own and returns only a summary. The files it has read therefore do not end up in your main context.
 
-## Ausgangslage
+## Starting point
 
-Der Excel-Import aus Schritt 3 geht von einem festen Spaltenlayout aus. In der Praxis exportieren unterschiedliche Zeiterfassungs-Tools (oder unterschiedliche Konfigurationen desselben Tools) aber unterschiedliche Spaltenreihenfolgen und -namen — das reale Export-Format des Unternehmens hat z.B. deutlich mehr und anders benannte Spalten als unsere Beispieldatei.
+The Excel import from step 3 assumes a fixed column layout. In practice, however, different time-tracking tools (or different configurations of the same tool) export different column orders and names — the company's real export format, for example, has significantly more and differently named columns than our sample file.
 
-## Aufgabe
+## Task
 
-Baue den Import so um, dass die Zuordnung der Spalten zu den fachlichen Feldern (Datum, Username, Stunden, Task, Abwesenheit) konfigurierbar ist, statt fest im Code zu stehen — z.B. über die Spaltenüberschriften (Kopfzeile) statt feste Spaltenpositionen, mit einem Default-Mapping aus der Konfiguration und der Möglichkeit, es pro Import-Aufruf zu überschreiben.
+Rebuild the import so that the assignment of columns to the business fields (date, username, hours, task, absence) is configurable instead of hard-coded — e.g. via the column headers (header row) instead of fixed column positions, with a default mapping from the configuration and the option to override it per import call.
 
-## Empfohlener Workflow
+## Recommended workflow
 
-Bevor du umbaust: Lass dir von Claude Code zunächst ein Code-Review des bestehenden `TimeEntryImportService` geben — welche Stellen sind fest an das aktuelle Spaltenlayout gekoppelt? Macht das Review als Experiment mit eurem Nachbarn. Beide starten mit `/clear` und notieren sich den Kontext-% aus der Statuszeile.
+Before you rebuild: first ask Claude Code for a code review of the existing `TimeEntryImportService` — which places are tightly coupled to the current column layout? Run the review as an experiment with your neighbor. Both of you start with `/clear` and note the context % from the status line.
 
-Person A reviewt direkt:
-
-```bash
-Reviewe den TimeEntryImportService: Welche Stellen sind fest an das aktuelle Spaltenlayout gekoppelt?
-```
-
-Person B reviewt per Subagent:
+Person A reviews directly:
 
 ```bash
-Lass einen Subagent den TimeEntryImportService reviewen: Welche Stellen sind fest an das aktuelle Spaltenlayout gekoppelt? Gib mir nur das Ergebnis zurück.
+Review the TimeEntryImportService: which places are tightly coupled to the current column layout?
 ```
 
-> **Aufgabe:** Vergleicht Kontext-% und Tokens in der Statuszeile und schaut euch mit `/context` an, was im Kontext liegt. Wie unterscheiden sich die Ergebnisse des Reviews? In diesem kleinen Projekt ist der Unterschied noch überschaubar, in echten Projekten mit vielen Dateien fällt er stark ins Gewicht.
+Person B reviews via a subagent:
 
-Alternativ kannst du für das Review auch die Skills `code-review` oder `simplify` nutzen. Erst danach den Umbau planen, mit `/grilling` hinterfragen (z.B.: Was passiert, wenn eine im Mapping referenzierte Spalte in der Datei fehlt? Muss die Beispieldatei weiter funktionieren?) und umsetzen.
+```bash
+Have a subagent review the TimeEntryImportService: which places are tightly coupled to the current column layout? Return only the result to me.
+```
 
-## Feature selbst testen (Pflicht)
+> **Task:** Compare the context % and tokens in the status line and use `/context` to look at what is in the context. How do the results of the review differ? In this small project the difference is still manageable; in real projects with many files it matters a lot.
 
-Nach einem Refactoring ist der wichtigste Test der, dass das alte Verhalten unverändert funktioniert — und zwar in der laufenden Anwendung, nicht nur in der Testsuite.
+Alternatively, you can use the `code-review` or `simplify` skills for the review. Only then plan the rebuild, challenge it with `/grilling` (e.g.: what happens if a column referenced in the mapping is missing from the file? Does the sample file still have to work?) and implement it.
 
-1. **App starten** — in einem zweiten Terminal, oder von Claude im Hintergrund starten lassen:
+## Test the feature yourself (mandatory)
+
+After a refactoring, the most important test is that the old behavior still works unchanged — in the running application, not just in the test suite.
+
+1. **Start the app** — in a second terminal, or have Claude start it in the background:
 
    ```bash
    ./mvnw spring-boot:run
    ```
 
-2. **Swagger UI öffnen** — <http://localhost:8080/swagger-ui.html>. Im Dev Container ist Port 8080 weitergeleitet (siehe Reiter „Ports").
+2. **Open the Swagger UI** — <http://localhost:8080/swagger-ui.html>. In the Dev Container, port 8080 is forwarded (see the "Ports" tab).
 
-3. **Default-Mapping (Regression)** — `POST /api/time-entries/import` mit `samples/zeiterfassung-import-beispiel.xlsx` ohne eigenes Mapping → unverändert 9 importierte Zeilen und eine übersprungene Zeile (`x.unbekannt`).
+3. **Default mapping (regression)** — `POST /api/time-entries/import` with `samples/timesheet-import-example.xlsx` without a mapping of your own → still 9 imported rows and one skipped row (`x.unknown`).
 
-4. **Eigenes Mapping** — Lass dir von Claude eine zweite Excel-Datei mit anderen Spaltennamen und anderer Reihenfolge erzeugen (z.B. `Tag`, `Mitarbeiter`, `Dauer`, `Tätigkeit`, `Urlaub`), importiere sie mit passendem Mapping und prüfe über `GET /api/employees/{employeeId}/time-entries`, dass die Einträge wirklich angekommen sind.
+4. **Your own mapping** — Have Claude generate a second Excel file with different column names and a different order (e.g. `Day`, `Employee`, `Duration`, `Activity`, `Vacation`), import it with a matching mapping and use `GET /api/employees/{employeeId}/time-entries` to check that the entries really arrived.
 
-5. **Fehlerfall** — Dieselbe Datei mit einem Mapping importieren, das eine nicht vorhandene Spalte referenziert → klare 400-Antwort, die die fehlende Spalte benennt, statt stillschweigend falscher Daten.
+5. **Error case** — Import the same file with a mapping that references a column that does not exist → a clear 400 response that names the missing column, instead of silently wrong data.
 
-6. **Wenn etwas nicht stimmt** — gib Claude die konkrete Anfrage, das verwendete Mapping und die Antwort aus der Swagger UI statt nur „geht nicht".
+6. **If something is wrong** — give Claude the concrete request, the mapping you used and the response from the Swagger UI instead of just "doesn't work".
 
-## Akzeptanzkriterien
+## Acceptance criteria
 
-- Der bestehende Import mit der Beispieldatei und dem Default-Mapping funktioniert weiterhin unverändert.
-- Eine Datei mit abweichenden, aber vollständigen Spaltenüberschriften lässt sich importieren, wenn ein passendes Mapping mitgegeben wird.
-- Fehlt eine im Mapping referenzierte Pflichtspalte in der Datei, liefert der Import einen klaren Fehler (HTTP 400) statt eines unklaren Fehlers oder falscher Daten.
-- `./mvnw test` läuft grün, inkl. eines Tests mit abweichendem Spalten-Mapping.
-- Du hast beide Importe (Default-Mapping und eigenes Mapping) sowie den Fehlerfall selbst in der laufenden Anwendung ausprobiert.
+- The existing import with the sample file and the default mapping still works unchanged.
+- A file with different but complete column headers can be imported when a matching mapping is supplied.
+- If a required column referenced in the mapping is missing from the file, the import returns a clear error (HTTP 400) instead of an unclear error or wrong data.
+- `./mvnw test` passes, including a test with a different column mapping.
+- You have tried both imports (default mapping and your own mapping) as well as the error case yourself in the running application.
 
-Das ist der letzte Pflichtschritt dieser Übung — glückwunsch! Die vollständige Referenzlösung findest du in `step-7-de`, eine optionale Zusatzübung (eigenen Skill bauen) in `step-8-de`.
+This is the last mandatory step of this exercise — congratulations! You can find the complete reference solution in `step-7-en`, and an optional bonus exercise (build your own skill) in `step-8-en`.
