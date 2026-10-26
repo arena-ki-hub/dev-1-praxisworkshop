@@ -74,13 +74,13 @@ Fertig? Dann weiter mit Schritt 3 (Excel-Import).
 ```bash
 git reset --hard        # verwirft Änderungen an vorhandenen Dateien
 git clean -fd           # entfernt neu angelegte Dateien
-git checkout step-3
+git checkout step-3-de
 ```
 
 Statt die Befehle selbst zu tippen, kannst du Claude auch einfach sagen, was passieren soll:
 
 ```bash
-Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-3.
+Verwirf alle meine Änderungen, auch neu angelegte Dateien, und wechsle auf den Branch step-3-de.
 ```
 
 Danach in Claude einmal `/clear`: Der Kontext aus diesem Schritt hilft im nächsten nicht und kostet bei jeder Nachricht erneut Tokens.
