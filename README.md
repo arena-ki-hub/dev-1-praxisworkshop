@@ -152,22 +152,6 @@ Oder innerhalb einer laufenden Session:
 
 Ein grüner `./mvnw test` heißt zunächst nur: Claudes Code besteht Claudes Tests. Ob das Feature wirklich funktioniert, siehst du erst in der laufenden Anwendung — und genau dieser Blick fällt beim agentischen Arbeiten als Erstes unter den Tisch. Deshalb endet jeder Übungsschritt mit einem manuellen Test; die konkreten Fälle stehen jeweils im README des Schritts unter „Feature selbst testen".
 
-1. App starten – entweder selbst in einem zweiten Terminal:
-
-   ```bash
-   ./mvnw spring-boot:run
-   ```
-
-   oder von Claude starten lassen (`Starte die App im Hintergrund und sag mir, wenn sie läuft`).
-
-2. Swagger UI im Browser öffnen: <http://localhost:8080/swagger-ui.html>. Der Dev Container leitet Port 8080 automatisch weiter (Reiter „Ports" in VS Code), ein Strg+Klick auf die URL im Terminal öffnet sie direkt.
-
-3. Die Endpunkte mit „Try it out" durchklicken – immer den Happy Path **und** mindestens einen Fehlerfall. Anschließend prüfen, ob die Daten wirklich angekommen sind (`GET`-Endpunkt oder H2-Konsole).
-
-4. Geht etwas schief, gib Claude die konkrete Anfrage und die Antwort („`POST /api/employees` mit doppeltem Username liefert 500, Response: …") statt nur „geht nicht". Damit hat es genau den Kontext, den der Testlauf nicht liefert.
-
-> **Tipp:** Die H2-Konsole unter <http://localhost:8080/h2-console> (JDBC-URL `jdbc:h2:mem:backend`, Benutzer `sa`, kein Passwort) zeigt dir, was tatsächlich in der Datenbank steht. Die Datenbank liegt im Arbeitsspeicher: nach jedem Neustart der App gelten wieder die Seed-Daten aus `data.sql`.
-
 # Weiter
 
 Fertig? Dann weiter mit Schritt 1 (Mitarbeiter-Verwaltung + Swagger UI).
